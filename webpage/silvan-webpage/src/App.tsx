@@ -1,9 +1,17 @@
-import InputArea from "./InputArea";
-import OuptputArea from "./OutputArea";
+import { Fragment } from "react/jsx-runtime";
+
+import InputArea from "./components/InputArea";
+import OutputArea from "./components/OutputArea";
 
 function App() {
-  return <div><InputArea /></div>;
-  return <div><OutputArea /></div>;
+  return (
+    <>
+      <div className = "p-10">
+        <div><InputArea /></div>
+        <div><OutputArea /></div>
+      </div>
+    </>
+  );
 }
 
 export default App
