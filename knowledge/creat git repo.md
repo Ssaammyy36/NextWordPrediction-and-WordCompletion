@@ -26,5 +26,3 @@
 ### Repo local aufsetzen
 
 - git clone <my-ssh-url>
-- Bäume sind 
-grün
