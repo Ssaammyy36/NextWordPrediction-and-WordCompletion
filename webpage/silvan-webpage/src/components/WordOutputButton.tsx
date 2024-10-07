@@ -1,5 +1,3 @@
-import React from 'react';
-
 function WordOutputButton({ number, word, onClick }) {
     return (
         <button 
