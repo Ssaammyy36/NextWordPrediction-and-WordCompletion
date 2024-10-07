@@ -7,10 +7,6 @@ import App from './App.tsx'
 import 'bootstrap/dist/css/bootstrap.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-// transformer
-import { pipeline } from '@xenova/transformers';
-import { HfInference } from "@huggingface/inference";
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

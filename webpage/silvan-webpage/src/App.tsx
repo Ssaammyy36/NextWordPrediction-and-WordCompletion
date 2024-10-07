@@ -6,15 +6,16 @@ function App() {
     <>
     <div className="container d-flex flex-column justify-content-center align-items-center min-vh-100 p-4">
       <div className="p-10 w-100">
-        <div className="mb-4">
-          <InputArea />
-        </div>
-        <div>
-          <OutputArea />
+          
+          <div className="mb-4">
+            <InputArea />
+          </div>
+          <div>
+            <OutputArea />
+          </div>
         </div>
       </div>
-    </div>
-  </>
+    </>
   );
 }
 
