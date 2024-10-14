@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { pipeline, env } from '@xenova/transformers';
+import * as tf from '@tensorflow/tfjs';
+//import { pipeline, env } from '@xenova/transformers';
 
 function TextInput({ inputText, setInputText }) {
 
@@ -14,11 +15,18 @@ function TextInput({ inputText, setInputText }) {
     const handleKeyDown = (e) => {
         if (e.key === ' ') { 
             console.log("Spacekey detected")
-            predictNextWord(); // Word-Prediction-Funktion aufrufen
+            
+            loadModel('https://example.com/model.json')
+                .then(model => {
+                    predictNextWord(model, 'hello world')
+                    .then(predictedWords => console.log(predictedWords))
+                    .catch(error => console.error(error));
+                })
+                .catch(error => console.error(error));
         }
     };
 
-    async function predictNextWord() {
+    /*async function predictNextWord() {
         setLoading(true); 
         try {
             console.log("Test 1");
@@ -37,6 +45,37 @@ function TextInput({ inputText, setInputText }) {
             console.error("Fehler bei der Vorhersage:", error);
         } finally {
             setLoading(false); // Ladeanzeige deaktivieren
+        }
+    }*/
+
+    async function loadModel(url) {
+        try {
+            const model = await tf.loadLayersModel(url);
+            return model;
+        } catch (error) {
+            console.error('Error loading model:', error);
+            return null;
+        }
+        }
+
+    async function predictNextWord() {
+        try {
+            // Preprocess input text
+            const input = tf.tensor2d([inputText.split(' ').map(word => word.charCodeAt(0))], [1, inputText.length]);
+        
+            // Make prediction
+            const output = await model.predict(input);
+        
+            // Get top 5 predictions
+            const predictions = await output.topK(5);
+        
+            // Convert predictions to words
+            const predictedWords = predictions.indices.dataSync().map(index => String.fromCharCode(index));
+        
+            return predictedWords;
+        } catch (error) {
+            console.error('Error making prediction:', error);
+            return null;
         }
     }
 
