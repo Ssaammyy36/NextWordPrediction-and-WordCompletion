@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import InputArea from "./components/InputArea";
 import OutputArea from "./components/OutputArea";
+import AiArea from "./components/AiArea";
 
 function App() {
   const [inputText, setInputText] = useState(''); 
@@ -15,6 +16,9 @@ function App() {
           </div>
           <div>
             <OutputArea setInputText={setInputText} />
+          </div>
+          <div>
+            <AiArea/>
           </div>
         </div>
       </div>
