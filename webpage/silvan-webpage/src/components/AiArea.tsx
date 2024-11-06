@@ -18,7 +18,7 @@ function AiArea() {
       setIsLoading(true); 
       console.log("Lade das Modell...");
       try {
-        cachedModel = await tf.loadLayersModel(modelPath);
+        const cachedModel = await tf.loadLayersModel(modelPath);
         setIsLoading(false); 
         console.log("Modell erfolgreich geladen");
       } catch (error) {
