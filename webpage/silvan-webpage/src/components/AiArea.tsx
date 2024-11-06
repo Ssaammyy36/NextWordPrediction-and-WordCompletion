@@ -1,115 +1,67 @@
-import React, { useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
+import { useState, useEffect } from 'react';
 
+// Variablen
+const modelPath = '/lstm_js/model.json';
+const exampleSentence = "Hallo wie geht";
+
+// Komponente
 function AiArea() {
-  const [model, setModel] = useState(null); // Modell im State speichern
-  const [tokenizer, setTokenizer] = useState(null);
-  const [maxSequenceLen, setMaxSequenceLen] = useState(0);
-  
-  const textFile = '/example_text.txt'; 
-  const topK = 5; // Anzahl der Top-Wörter
+  const [output, setOutput] = useState(null); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [isPredicting, setPredicting] = useState(false); 
 
-  // Funktion zum Laden des Datensatzes
-  const loadData = async (textFile) => {
-    try {
-      const response = await fetch(textFile); 
-      if (!response.ok) throw new Error('Fehler beim Laden der Datei');
-      const data = await response.text();
-      console.log(`Datensatz: ${data.slice(0, 250)}`);
-      return data;
-    } catch (error) {
-      console.error('Fehler beim Laden des Datensatzes:', error);
-      return null;
+  // Funktion zum Laden des Modells
+  const loadModel = async (modelPath) => {
+    let cachedModel = null;
+    if (!cachedModel) {
+      setIsLoading(true); 
+      console.log("Lade das Modell...");
+      try {
+        cachedModel = await tf.loadLayersModel(modelPath);
+        setIsLoading(false); 
+        console.log("Modell erfolgreich geladen");
+      } catch (error) {
+        console.error("Fehler beim Laden des Modells:", error);
+        setIsLoading(false); 
+      }
+    } else {
+      console.log("Modell aus Cache verwendet");
     }
+    return cachedModel;
   };
 
-  // Tokenizer-Klasse
-  class Tokenizer {
-    constructor() {
-      this.wordIndex = {};
-      this.indexWord = {};
-      this.wordCount = 0;
-    }
-    fitOnTexts(corpus) {
-      corpus.forEach(sentence => {
-        sentence.toLowerCase().split(/\s+/).forEach(word => {
-          if (!(word in this.wordIndex)) {
-            this.wordIndex[word] = ++this.wordCount;
-            this.indexWord[this.wordCount] = word;
-          }
-        });
-      });
-    }
-    textsToSequences(corpus) {
-      return corpus.map(sentence =>
-        sentence.toLowerCase().split(/\s+/).map(word => this.wordIndex[word] || 0)
-      );
-    }
-  }
+  // Funktion für Wortvorhersage
+  const makePrediction = async (model, exampleSentence) => {
+    const tokenizedSentence = exampleSentence.split(' ');
+    const inputTensor = tf.tensor2d([tokenizedSentence.map(word => word.length)]); 
 
-  const generateTokenizer = (data) => {
-    const tokenizer = new Tokenizer();
-    const corpus = data.trim().split('\n');
-    tokenizer.fitOnTexts(corpus);
-    const sequences = tokenizer.textsToSequences(corpus);
-    setTokenizer(tokenizer);
-    setMaxSequenceLen(Math.max(...sequences.map(seq => seq.length)));
-    return sequences;
+    setPredicting(true); 
+    console.log("Startet Vorhersage...");
+    const prediction = model.predict(inputTensor);
+      
+    const predictedData = prediction.dataSync(); 
+    setOutput(predictedData); 
+    setPredicting(false);
+    console.log(`Vorhersage: ${predictedData}`);
   };
 
-  const createModel = (totalWords, maxSequenceLen) => {
-    const model = tf.sequential();
-    model.add(tf.layers.embedding({ inputDim: totalWords, outputDim: 100, inputLength: maxSequenceLen - 1 }));
-    model.add(tf.layers.bidirectional({ layer: tf.layers.lstm({ units: 150 }) }));
-    model.add(tf.layers.dense({ units: totalWords, activation: 'softmax' }));
-    model.compile({ loss: 'categoricalCrossentropy', optimizer: tf.train.adam(0.01), metrics: ['accuracy'] });
-    return model;
-  };
-
-  const trainModel = async (model, xs, ys) => {
-    await model.fit(xs, ys, { epochs: 100, verbose: 1 });
-    console.log('Training abgeschlossen');
-  };
-
-  const loadModelClick = async () => {
-    const data = await loadData(textFile);
-    if (data) {
-      const sequences = generateTokenizer(data);
-      const totalWords = Object.keys(tokenizer.wordIndex).length + 1;
-      const xs = tf.tensor2d(sequences.map(seq => seq.slice(0, -1)));
-      const ys = tf.tensor2d(sequences.map(seq => seq.slice(-1)));
-      const model = createModel(totalWords, maxSequenceLen);
-      setModel(model);
-      await trainModel(model, xs, ys);
-    }
-  };
-  loadModelClick();
-
-  const predictNextWords = (seedText) => {
-    const tokenList = tokenizer.textsToSequences([seedText])[0];
-    const padded = Array(maxSequenceLen - 1).fill(0);
-    tokenList.forEach((t, i) => (padded[padded.length - tokenList.length + i] = t));
-    const inputTensor = tf.tensor2d([padded], [1, maxSequenceLen - 1]);
-
-    const predictions = model.predict(inputTensor).arraySync()[0];
-    const topWords = Array.from(predictions)
-      .map((prob, index) => ({ word: tokenizer.indexWord[index], prob }))
-      .sort((a, b) => b.prob - a.prob)
-      .slice(0, topK);
-
-    console.log(`Vorhersagen für "${seedText}":`);
-    topWords.forEach(({ word, prob }) => console.log(`${word}: ${prob.toFixed(4) * 100}%`));
-  };
+  // Ausführen beim ersten Rendern
+  useEffect(() => {
+    const loadAndPredict = async () => {
+      const model = await loadModel(modelPath); 
+      makePrediction(model, exampleSentence); 
+    };
+    loadAndPredict(); 
+  }, []); 
 
   return (
     <div>
-        <h1>TensorFlow.js Modell laden</h1>
-
-        <div className="d-flex flex-wrap gap-3">
-            <button className="btn btn-outline-primary mb-3" onClick={() => predictNextWords('Wie')}>Predict Next Word</button>
-        </div>
+      <h1>AI Area</h1>
+      <p>Input: {exampleSentence}</p>
+      <p>Output: {isLoading ? 'Lade Modell und mache Vorhersage...' : isPredicting ? 'Mache Vorhersage...' : output ? output.join(', ') : 'Keine Vorhersage möglich'}</p>
     </div>
   );
-}
+};
 
 export default AiArea;
