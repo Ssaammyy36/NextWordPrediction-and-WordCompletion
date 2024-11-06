@@ -7,20 +7,23 @@ const exampleSentence = "Hallo wie geht";
 
 // Komponente
 function AiArea() {
+  const [model, setModel] = useState(null); 
   const [output, setOutput] = useState(null); 
   const [isLoading, setIsLoading] = useState(false); 
   const [isPredicting, setPredicting] = useState(false); 
 
   // Funktion zum Laden des Modells
   const loadModel = async (modelPath) => {
-    let cachedModel = null;
-    if (!cachedModel) {
+    if (!model) {
       setIsLoading(true); 
       console.log("Lade das Modell...");
       try {
-        const cachedModel = await tf.loadLayersModel(modelPath);
+        //const cachedModel = await tf.loadLayersModel(modelPath);
+        const loadedModel = await tf.loadGraphModel(modelPath);
+        setModel(loadedModel);
         setIsLoading(false); 
         console.log("Modell erfolgreich geladen");
+        console.log(loadedModel);
       } catch (error) {
         console.error("Fehler beim Laden des Modells:", error);
         setIsLoading(false); 
@@ -28,7 +31,6 @@ function AiArea() {
     } else {
       console.log("Modell aus Cache verwendet");
     }
-    return cachedModel;
   };
 
   // Funktion für Wortvorhersage
@@ -48,16 +50,7 @@ function AiArea() {
 
   // Ausführen bei ersten Render
   useEffect(() => {
-        const loadAndPredict = async () => {
-      const model = await loadModel(modelPath); 
-      
-      if (model) {
-        makePrediction(model, exampleSentence);
-      } else {
-        console.log("Modell konnte nicht geladen werden, keine Vorhersage möglich");
-      }
-    };
-    loadAndPredict();
+    loadModel(modelPath); 
   }, []);
 
   return (
