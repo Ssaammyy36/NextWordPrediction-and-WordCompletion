@@ -57,7 +57,6 @@ function AiArea() {
         console.log("Modell konnte nicht geladen werden, keine Vorhersage möglich");
       }
     };
-
     loadAndPredict();
   }, []);
 

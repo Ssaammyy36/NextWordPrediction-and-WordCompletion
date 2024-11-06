@@ -1,0 +1,18 @@
+{
+    "name": "silvan-jupyternotebook",
+    "image": "silvan-container:2024-11-06_16-35-55",  
+    "workspaceFolder": "/workspace",
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter"
+    ],
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/workspace,type=bind"
+    ],
+    "forwardPorts": [8888],
+    "postCreateCommand": "pip install -r requirements.txt",
+    "remoteUser": "root"
+}
