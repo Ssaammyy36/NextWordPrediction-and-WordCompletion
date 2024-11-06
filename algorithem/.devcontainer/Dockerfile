@@ -4,7 +4,8 @@ FROM python:3.10-slim
 # Installiere apt
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y curl \
-    wget 
+    wget \
+    git
 
 # Install pip
 COPY requirements.txt /tmp/
