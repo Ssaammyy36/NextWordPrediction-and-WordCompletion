@@ -2,7 +2,7 @@ import * as tf from '@tensorflow/tfjs';
 import { useState, useEffect } from 'react';
 
 // Variablen
-const modelPath = '/lstm_js/model.json';
+const modelPath = 'models/lstm_js/model.json';
 const exampleSentence = "Hallo wie geht";
 
 // Komponente
@@ -46,20 +46,26 @@ function AiArea() {
     console.log(`Vorhersage: ${predictedData}`);
   };
 
-  // Ausführen beim ersten Rendern
+  // Ausführen bei ersten Render
   useEffect(() => {
-    const loadAndPredict = async () => {
+        const loadAndPredict = async () => {
       const model = await loadModel(modelPath); 
-      makePrediction(model, exampleSentence); 
+      
+      if (model) {
+        makePrediction(model, exampleSentence);
+      } else {
+        console.log("Modell konnte nicht geladen werden, keine Vorhersage möglich");
+      }
     };
-    loadAndPredict(); 
-  }, []); 
+
+    loadAndPredict();
+  }, []);
 
   return (
     <div>
       <h1>AI Area</h1>
       <p>Input: {exampleSentence}</p>
-      <p>Output: {isLoading ? 'Lade Modell und mache Vorhersage...' : isPredicting ? 'Mache Vorhersage...' : output ? output.join(', ') : 'Keine Vorhersage möglich'}</p>
+      <p>Output: {isLoading ? 'Ladet Modell' : isPredicting ? 'Macht Vorhersage' : output ? output.join(', ') : 'Keine Vorhersage möglich'}</p>
     </div>
   );
 };
