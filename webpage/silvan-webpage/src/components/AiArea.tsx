@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
-function NlpModelArea() {
+function AiArea() {
   const [model, setModel] = useState(null); // Modell im State speichern
   const [tokenizer, setTokenizer] = useState(null);
   const [maxSequenceLen, setMaxSequenceLen] = useState(0);
@@ -83,6 +83,7 @@ function NlpModelArea() {
       await trainModel(model, xs, ys);
     }
   };
+  loadModelClick();
 
   const predictNextWords = (seedText) => {
     const tokenList = tokenizer.textsToSequences([seedText])[0];
@@ -105,11 +106,10 @@ function NlpModelArea() {
         <h1>TensorFlow.js Modell laden</h1>
 
         <div className="d-flex flex-wrap gap-3">
-            <button className="btn btn-outline-primary mb-3" onClick={loadModelClick}>Modell Laden</button>
             <button className="btn btn-outline-primary mb-3" onClick={() => predictNextWords('Wie')}>Predict Next Word</button>
         </div>
     </div>
   );
 }
 
-export default NlpModelArea;
+export default AiArea;

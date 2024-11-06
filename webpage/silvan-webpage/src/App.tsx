@@ -2,7 +2,7 @@ import React, { useState, useEffect  } from 'react';
 
 import InputArea from "./components/InputArea";
 import OutputArea from "./components/OutputArea";
-import NlpModelArea from "./components/NlpModelArea";
+import AiArea from "./components/AiArea";
 
 function App() {
   const [inputText, setInputText] = useState(''); 
@@ -18,7 +18,8 @@ function App() {
             <OutputArea setInputText={setInputText} />
           </div>
           <div>
-            <NlpModelArea />
+            <AiArea />
+            {/*<TrainAiModel />*/}
           </div>
         </div>
       </div>
