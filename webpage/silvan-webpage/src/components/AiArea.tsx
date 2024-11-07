@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 // Variablen
 const modelPath = 'models/lstm_js/model.json';
-const exampleSentence = "Hallo ich bin";
+//const inputText = "Hallo ich bin";
 const wordIndexPath = 'tokenizer_word_index.json';
 const maxSequenceLength = 9;                          // 10 - 1 = 9 
 
@@ -27,17 +27,16 @@ class Tokenizer {
 }
 
 // Hauptkomponente
-function AiArea() {
+function AiArea({inputText, setPrediction, startPrediction, setStartPrediction}) {
   const [model, setModel] = useState(null); 
   const [tokenizer, setTokenizer] = useState(null);  // Tokenizer im Zustand speichern
-  const [output, setOutput] = useState(null); 
   const [isLoading, setIsLoading] = useState(false); 
-  const [isPredicting, setPredicting] = useState(false); 
+  const [isPredicting, setIsPredicting] = useState(false); 
 
   // Modell laden
   const loadModel = async (modelPath) => {
     setIsLoading(true); 
-    console.log("Lade das Modell...");
+    console.log("Ladet das Modell ...");
     try {
       const loadedModel = await tf.loadGraphModel(modelPath);  // Modell laden
       setModel(loadedModel);  // Modell in Zustand speichern
@@ -49,27 +48,20 @@ function AiArea() {
     }
   };
 
+
   // Funktion für Vorhersage
-  const makePrediction = async (exampleSentence) => {
-    if (model && tokenizer) {
-        setPredicting(true); 
+  const makePrediction = async (inputText) => {
+    if (model && tokenizer && inputText !== '') {
+        setIsPredicting(true); 
         console.log("Start der Vorhersage...");
 
-        // Tokenisiere den Beispiel-Satz und wende Padding an
-        const tokenizedSentence = tokenizer.textsToSequences([exampleSentence])[0];
-        
-        // Sicherstellen, dass die Eingabedaten genau 8 Tokens haben (Padding am Anfang)
+        const tokenizedSentence = tokenizer.textsToSequences([inputText])[0];
         const paddedSentence = [
             ...Array(maxSequenceLength - tokenizedSentence.length).fill(0),  // Padding am Anfang
             ...tokenizedSentence
         ].slice(0, maxSequenceLength);  // Wenn mehr als 8 Tokens vorhanden sind, auf 8 kürzen
-
-        console.log("Padded Sentence:", paddedSentence);
-
-        // In Tensor umwandeln
         const inputTensor = tf.tensor2d([paddedSentence]);
 
-        // Vorhersage mit executeAsync
         try {
             const prediction = await model.executeAsync(inputTensor);
 
@@ -84,15 +76,13 @@ function AiArea() {
 
             // Indizes in Wörter umwandeln
             const top10Words = top10.map(item => tokenizer.indexWord[item.index]);
-
-            // Ausgabe der 10 wahrscheinlichsten Wörter
+            setPrediction (top10Words);  // Ausgabe speichern
             console.log("Top 10 wahrscheinlichste Wörter:", top10Words);
-
-            setOutput(top10Words);  // Ausgabe speichern
-            setPredicting(false);  // Vorhersage-Status deaktivieren
         } catch (error) {
             console.error("Fehler bei der Vorhersage:", error);
-            setPredicting(false);
+        } finally {
+            setIsPredicting(false);
+            setStartPrediction(false); 
         }
     } else {
         console.log("Modell oder Tokenizer noch nicht geladen.");
@@ -109,16 +99,16 @@ function AiArea() {
 
   // Vorhersage nach dem Laden des Modells und Tokenizers
   useEffect(() => {
-    if (model && tokenizer) {
-      makePrediction(exampleSentence);  // Vorhersage auf Beispiel-Satz machen
+    if (startPrediction && model && tokenizer && inputText.trim() !== '') {
+        // Vorhersage nur einmal auslösen, wenn startPrediction von false auf true geht
+        makePrediction(inputText);
     }
-  }, [model, tokenizer]);  // Nur ausführen, wenn Modell und Tokenizer verfügbar sind
+}, [startPrediction, inputText, model, tokenizer]);
 
   return (
     <div>
       <h1>AI Area</h1>
-      <p>Input: {exampleSentence}</p>
-      <p>Output: {isLoading ? 'Ladet Modell...' : isPredicting ? 'Macht Vorhersage...' : output ? output.join(', ') : 'Keine Vorhersage möglich'}</p>
+      <p>Ladezustand: {isLoading ? 'Ladet Modell...' : isPredicting ? 'Berechnet Vorhersage ...' : 'Bereit ...'}</p>
     </div>
   );
 };

@@ -5,12 +5,12 @@ import DeleteLastLetterButton from './DeleteLastLetterButton';
 import DeleteLastWordButton from './DeleteLastWordButton';
 import DeleteSentenceButton from './DeleteSentenceButton';
 
-function InputArea({inputText, setInputText}) {
+function InputArea({inputText, setInputText, setStartPrediction}) {
     return (
         <>
             <div className="p-10">
                 <h1>Input Text</h1>
-                <TextInput inputText={inputText} setInputText={setInputText} />
+                <TextInput inputText={inputText} setInputText={setInputText} setStartPrediction={setStartPrediction}/>
 
                 <div className="d-flex flex-wrap gap-3">
                     <DeleteLastLetterButton setInputText={setInputText} />
