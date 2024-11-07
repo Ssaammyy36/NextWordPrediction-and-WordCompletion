@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 
 // Variablen
 const modelPath = 'models/lstm_js/model.json';
-//const inputText = "Hallo ich bin";
 const wordIndexPath = 'tokenizer_word_index.json';
 const maxSequenceLength = 9;                          // 10 - 1 = 9 
 
@@ -20,34 +19,52 @@ class Tokenizer {
 
   // Funktion, um das Tokenizer-Modell aus einer JSON-Datei zu laden
   static async load(wordIndexPath) {
-    const response = await fetch(wordIndexPath);
-    const wordIndex = await response.json();
-    return new Tokenizer(wordIndex);
+    try {
+      console.log("Ladet Tokenizer ...");
+      const response = await fetch(wordIndexPath);
+      const wordIndex = await response.json();
+      return new Tokenizer(wordIndex);
+    } catch (error) {
+      console.log("Fehler beim Laden des Tokenizers:", error);
+    }
   }
 }
 
 // Hauptkomponente
 function AiArea({inputText, setPrediction, startPrediction, setStartPrediction}) {
+
   const [model, setModel] = useState(null); 
   const [tokenizer, setTokenizer] = useState(null);  // Tokenizer im Zustand speichern
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(true);  // Initial auf true setzen, um Ladeanzeige zu zeigen
   const [isPredicting, setIsPredicting] = useState(false); 
 
-  // Modell laden
-  const loadModel = async (modelPath) => {
-    setIsLoading(true); 
-    console.log("Ladet das Modell ...");
+  // Modell und Tokenizer laden
+  const loadAssets = async () => {
     try {
-      const loadedModel = await tf.loadGraphModel(modelPath);  // Modell laden
-      setModel(loadedModel);  // Modell in Zustand speichern
-      setIsLoading(false); 
-      console.log("Modell erfolgreich geladen");
+
+      // Modell laden, falls noch nicht vorhanden
+      if (!model) {
+        console.log("Ladet das Modell ...");
+        const loadedModel = await tf.loadGraphModel(modelPath);  
+        setModel(loadedModel);  
+        console.log("Modell erfolgreich geladen");
+      }
+
+      // Tokenizer laden, falls noch nicht vorhanden
+      if (!tokenizer) {
+        console.log("Ladet Tokenizer ...");
+        const loadedTokenizer = await Tokenizer.load(wordIndexPath);  
+        setTokenizer(loadedTokenizer); 
+        console.log("Tokenizer erfolgreich geladen");
+      }
     } catch (error) {
-      console.error("Fehler beim Laden des Modells:", error);
-      setIsLoading(false); 
+      console.error("Fehler beim Laden des Modells oder Tokenizers:", error); 
+    } finally {
+      setIsLoading(false);  
     }
   };
 
+  // same comments 
 
   // Funktion für Vorhersage
   const makePrediction = async (inputText) => {
@@ -55,28 +72,27 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
         setIsPredicting(true); 
         console.log("Start der Vorhersage...");
 
-        const tokenizedSentence = tokenizer.textsToSequences([inputText])[0];
-        const paddedSentence = [
-            ...Array(maxSequenceLength - tokenizedSentence.length).fill(0),  // Padding am Anfang
-            ...tokenizedSentence
-        ].slice(0, maxSequenceLength);  // Wenn mehr als 8 Tokens vorhanden sind, auf 8 kürzen
-        const inputTensor = tf.tensor2d([paddedSentence]);
-
         try {
+            // Input Tokenisieren
+            const tokenizedSentence = tokenizer.textsToSequences([inputText])[0];
+            const paddedSentence = [
+                ...Array(maxSequenceLength - tokenizedSentence.length).fill(0),  
+                ...tokenizedSentence
+            ].slice(0, maxSequenceLength);  
+            const inputTensor = tf.tensor2d([paddedSentence]);
+
+            // Vorhersage durchfürfen
             const prediction = await model.executeAsync(inputTensor);
 
-            // Extrahieren der Wahrscheinlichkeiten und Sortieren
+            // Ausgabe verarbeiten
             const predictedData = prediction.dataSync();
             const sortedIndices = Array.from(predictedData)
-                .map((prob, index) => ({ index, prob }))
-                .sort((a, b) => b.prob - a.prob);
-
-            // Top 10 Wahrscheinlichkeiten extrahieren
-            const top10 = sortedIndices.slice(0, 10);
-
-            // Indizes in Wörter umwandeln
+                .map((prob, index) => ({ index, prob }))  
+            .sort((a, b) => b.prob - a.prob); 
+            const top10 = sortedIndices.slice(0, 10); 
             const top10Words = top10.map(item => tokenizer.indexWord[item.index]);
-            setPrediction (top10Words);  // Ausgabe speichern
+
+            setPrediction(top10Words); 
             console.log("Top 10 wahrscheinlichste Wörter:", top10Words);
         } catch (error) {
             console.error("Fehler bei der Vorhersage:", error);
@@ -89,26 +105,42 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
     }
 };
 
-  
+// ----------------------------------------------------------------------------------------------------------
 
-  // Effekt, der das Modell und den Tokenizer lädt
+  // Laden des Modells und Tokenizers nur einmal beim Initialisieren
   useEffect(() => {
-    loadModel(modelPath);  // Modell laden
-    Tokenizer.load(wordIndexPath).then(setTokenizer); // Tokenizer laden
-  }, []);  // Wird nur einmal beim Laden der Komponente ausgeführt
+    if (!model && !tokenizer) {
+      loadAssets();  // Lade Modell und Tokenizer nur einmal
+    }
+  }, []);  // Leeres Abhängigkeitsarray sorgt dafür, dass es nur einmal beim Initialisieren geladen wird
 
-  // Vorhersage nach dem Laden des Modells und Tokenizers
+  // Vorhersage starten, wenn alle Voraussetzungen erfüllt sind
   useEffect(() => {
     if (startPrediction && model && tokenizer && inputText.trim() !== '') {
-        // Vorhersage nur einmal auslösen, wenn startPrediction von false auf true geht
         makePrediction(inputText);
     }
-}, [startPrediction, inputText, model, tokenizer]);
+  }, [startPrediction, inputText, model, tokenizer]);  // Vorhersage wird nur gemacht, wenn alle Voraussetzungen erfüllt sind
 
   return (
     <div>
       <h1>AI Area</h1>
-      <p>Ladezustand: {isLoading ? 'Ladet Modell...' : isPredicting ? 'Berechnet Vorhersage ...' : 'Bereit ...'}</p>
+
+      {/* Ladeanzeige, wenn das Modell geladen wird */}
+      {isLoading ? (
+        <div className="d-flex align-items-center">
+          <div className="spinner-grow text-primary" role="status">
+          </div>
+        </div>
+      ) : isPredicting ? (
+        // Spinner während der Vorhersage
+        <div className="d-flex justify-content-center">
+          <div className="spinner-grow text-warning" role="status">
+            <span>Predicting ...</span>
+          </div>
+        </div>
+      ) : (
+        <p>Modell bereit ...</p>
+      )}
     </div>
   );
 };
