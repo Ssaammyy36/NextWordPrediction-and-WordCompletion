@@ -3,8 +3,9 @@ import { useState, useEffect } from 'react';
 
 // Variablen
 const modelPath = 'models/lstm_js/model.json';
-const wordIndexPath = 'tokenizer_word_index.json';
-const maxSequenceLength = 9;                          // 10 - 1 = 9 
+const wordIndexPath = 'models/lstm_js/tokenizer_word_index.json';    
+
+let maxSequenceLength; 
 
 // Tokenizer initialisieren
 class Tokenizer {
@@ -48,6 +49,10 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
         const loadedModel = await tf.loadGraphModel(modelPath);  
         setModel(loadedModel);  
         console.log("Modell erfolgreich geladen");
+
+        const inputShape = loadedModel.inputs[0].shape;
+        maxSequenceLength = inputShape[1];  
+        console.log("Input-Shape des Modells:", maxSequenceLength);
       }
 
       // Tokenizer laden, falls noch nicht vorhanden
@@ -63,8 +68,6 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
       setIsLoading(false);  
     }
   };
-
-  // same comments 
 
   // Funktion für Vorhersage
   const makePrediction = async (inputText) => {
