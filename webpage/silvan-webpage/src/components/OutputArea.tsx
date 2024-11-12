@@ -1,7 +1,7 @@
 import React from 'react';
 import WordOutputButton from './WordOutputButton';
 
-function OutputArea({ setInputText, prediction, setStartPrediction}) {
+function OutputArea({ setInputText, prediction, setStartPrediction }) {
 
     // Eingabe ergänzen + neue Vorhersage starten
     const handleButtonClick = (word) => {
@@ -13,7 +13,7 @@ function OutputArea({ setInputText, prediction, setStartPrediction}) {
     return (
         <div className="p-10">
           <h1>Word Prediction</h1>
-          <div className="d-flex flex-wrap gap-3">
+          <div className="d-flex flex-wrap gap-3 justify-content-start"> {/* Flexbox-Container */}
             {prediction && prediction.length > 0 ? (
               prediction.map((word, index) => (
                 <WordOutputButton 
@@ -28,7 +28,7 @@ function OutputArea({ setInputText, prediction, setStartPrediction}) {
             )}
           </div>
         </div>
-      );
-    }
+    );
+}
 
 export default OutputArea;

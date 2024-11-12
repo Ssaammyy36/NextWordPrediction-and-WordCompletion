@@ -2,8 +2,8 @@ import * as tf from '@tensorflow/tfjs';
 import { useState, useEffect } from 'react';
 
 // Variablen
-const modelPath = 'models/lstm_js/model.json';
-const wordIndexPath = 'models/lstm_js/tokenizer_word_index.json';    
+const modelPath = 'public/models/hero_to_zero_lstm/lstm_js/model.json';
+const wordIndexPath = 'public/models/hero_to_zero_lstm/lstm_js/tokenizer_word_index.json';    
 
 let maxSequenceLength; 
 
@@ -36,6 +36,8 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
 
   const [model, setModel] = useState(null); 
   const [tokenizer, setTokenizer] = useState(null);  // Tokenizer im Zustand speichern
+  const [maxSequenceLength, setMaxSequenceLength] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);  // Initial auf true setzen, um Ladeanzeige zu zeigen
   const [isPredicting, setIsPredicting] = useState(false); 
 
@@ -50,9 +52,10 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
         setModel(loadedModel);  
         console.log("Modell erfolgreich geladen");
 
+        // Input-Shape auslesen und maxSequenceLength setzen
         const inputShape = loadedModel.inputs[0].shape;
-        maxSequenceLength = inputShape[1];  
-        console.log("Input-Shape des Modells:", maxSequenceLength);
+        console.log("Input-Shape des Modells:", inputShape);
+        setMaxSequenceLength(inputShape[1]);  
       }
 
       // Tokenizer laden, falls noch nicht vorhanden
