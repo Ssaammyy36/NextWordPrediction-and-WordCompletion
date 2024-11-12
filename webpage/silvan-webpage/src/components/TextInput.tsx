@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 
-function TextInput({ inputText, setInputText, setStartPrediction }) {
+function TextInput({ inputText, setInputText, setStartPrediction, setStartAutocomplete}) {
 
+    // FAuslösung von Autocomplete bei neuen Buchstaben
     const handleInputChange = (e) => {
-        setInputText(e.target.value);
+        const newInput = e.target.value;
+        const lastChar = newInput.slice(-1);
+
+        // Überprüfen, ob der letzte Zeichen ein Buchstabe ist (regex für Buchstaben)
+        if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar)) {
+            console.log("Buchstabe erkannt:", lastChar);
+            setStartAutocomplete(true); 
+        }
+
+        // Aktualisiere den Text-Input-Wert
+        setInputText(newInput);
     };
 
     // Leertaste erkennen -> Vorhersage auslösen

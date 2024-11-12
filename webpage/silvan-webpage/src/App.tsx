@@ -8,6 +8,7 @@ function App() {
   const [inputText, setInputText] = useState(''); 
   const [prediction , setPrediction ] = useState(null); 
   const [startPrediction, setStartPrediction] = useState(false);
+  const [startAutocomplete, setStartAutocomplete] = useState(false);
 
   return (
     <>
@@ -18,6 +19,7 @@ function App() {
               inputText={inputText} 
               setInputText={setInputText} 
               setStartPrediction={setStartPrediction}
+              setStartAutocomplete={setStartAutocomplete}
             /> 
           </div>
           <div>
@@ -33,6 +35,8 @@ function App() {
               setPrediction={setPrediction}
               startPrediction={startPrediction}
               setStartPrediction={setStartPrediction}
+              startAutocomplete={startAutocomplete}
+              setStartAutocomplete={setStartAutocomplete}
             />
           </div>
         </div>

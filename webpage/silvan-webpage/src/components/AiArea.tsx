@@ -2,10 +2,8 @@ import * as tf from '@tensorflow/tfjs';
 import { useState, useEffect } from 'react';
 
 // Variablen
-const modelPath = 'public/models/hero_to_zero_lstm/lstm_js/model.json';
-const wordIndexPath = 'public/models/hero_to_zero_lstm/lstm_js/tokenizer_word_index.json';    
-
-let maxSequenceLength; 
+const modelPath = 'public/models/colab_lstm/lstm_js/model.json';
+const wordIndexPath = 'public/models/colab_lstm/lstm_js/tokenizer_word_index.json';    
 
 // Tokenizer initialisieren
 class Tokenizer {
@@ -32,7 +30,7 @@ class Tokenizer {
 }
 
 // Hauptkomponente
-function AiArea({inputText, setPrediction, startPrediction, setStartPrediction}) {
+function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, startAutocomplete, setStartAutocomplete}) {
 
   const [model, setModel] = useState(null); 
   const [tokenizer, setTokenizer] = useState(null);  // Tokenizer im Zustand speichern
@@ -40,6 +38,8 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
 
   const [isLoading, setIsLoading] = useState(true);  // Initial auf true setzen, um Ladeanzeige zu zeigen
   const [isPredicting, setIsPredicting] = useState(false); 
+
+  const [allPredictions, setAllPredictions] = useState([]);
 
   // Modell und Tokenizer laden
   const loadAssets = async () => {
@@ -72,14 +72,35 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
     }
   };
 
+  // Funktion zum Autocomplete
+  const autocomplete = (prefix) => {
+    // Überprüfe, ob allPredictions und der Prefix vorhanden sind
+    if (!Array.isArray(allPredictions) || !prefix) {
+        console.log("allPredictions oder Prefix fehlen");
+        return [];
+    }
+
+    // Filtere die Wörter basierend auf dem Prefix
+    const filteredWords = allPredictions.filter(word => typeof word === 'string' && word.startsWith(prefix));
+
+    // Logge die Eingabe und die gefilterten Wörter
+    console.log("Eingabe-Präfix:", prefix);
+    console.log("Gefilterte Vorhersagen:", filteredWords);
+
+    // Gebe die Top 10 Wörter zurück
+    const top10FilteredWords = filteredWords.slice(0, 10);
+    setPrediction(top10FilteredWords);
+    setStartAutocomplete(false);  // Setze das Flag zurück, um weitere Autocomplete-Versuche zu starten
+};
+
   // Funktion für Vorhersage
-  const makePrediction = async (inputText) => {
+  const makePrediction = async (inputText) => { 
     if (model && tokenizer && inputText !== '') {
         setIsPredicting(true); 
         console.log("Start der Vorhersage...");
 
         try {
-            // Input Tokenisieren
+            // Input tokenisieren
             const tokenizedSentence = tokenizer.textsToSequences([inputText])[0];
             const paddedSentence = [
                 ...Array(maxSequenceLength - tokenizedSentence.length).fill(0),  
@@ -87,18 +108,24 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
             ].slice(0, maxSequenceLength);  
             const inputTensor = tf.tensor2d([paddedSentence]);
 
-            // Vorhersage durchfürfen
+            // Vorhersage durchführen
             const prediction = await model.executeAsync(inputTensor);
 
             // Ausgabe verarbeiten
-            const predictedData = prediction.dataSync();
-            const sortedIndices = Array.from(predictedData)
+            const predictionArray = prediction.dataSync();        // Tensor in Array konvertieren
+            const sortedIndices = Array.from(predictionArray)
                 .map((prob, index) => ({ index, prob }))  
-            .sort((a, b) => b.prob - a.prob); 
+                .sort((predictionA, predicitonB) => predicitonB.prob - predictionA.prob);            // Wörter absteigend sortieren nach Warscheinlaichzeiten
+
+            // Alle Wörter
+            const allWords = sortedIndices.map(item => tokenizer.indexWord[item.index]);
+
+            // Top 10
             const top10 = sortedIndices.slice(0, 10); 
             const top10Words = top10.map(item => tokenizer.indexWord[item.index]);
 
             setPrediction(top10Words); 
+            setAllPredictions(allWords);
             console.log("Top 10 wahrscheinlichste Wörter:", top10Words);
         } catch (error) {
             console.error("Fehler bei der Vorhersage:", error);
@@ -120,12 +147,26 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction})
     }
   }, []);  // Leeres Abhängigkeitsarray sorgt dafür, dass es nur einmal beim Initialisieren geladen wird
 
-  // Vorhersage starten, wenn alle Voraussetzungen erfüllt sind
+  // Vorhersage starten
   useEffect(() => {
     if (startPrediction && model && tokenizer && inputText.trim() !== '') {
         makePrediction(inputText);
     }
   }, [startPrediction, inputText, model, tokenizer]);  // Vorhersage wird nur gemacht, wenn alle Voraussetzungen erfüllt sind
+
+  // Autocomplete starten
+  useEffect(() => {
+    if (startAutocomplete && model && tokenizer && inputText.trim() !== '') {
+        // Extrahiere das letzte Wort (Prefix)
+        const words = inputText.trim().split(/\s+/);  
+        const prefix = words[words.length - 1];  // Das letzte Wort (unvollständig)
+        
+        console.log("Eingabewort:", prefix);  // Log für das extrahierte Prefix
+
+        // Autocomplete mit dem extrahierten Prefix ausführen
+        autocomplete(prefix);
+    }
+}, [startAutocomplete, inputText, model, tokenizer]);
 
   return (
     <div>
