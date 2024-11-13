@@ -30,7 +30,7 @@ class Tokenizer {
 }
 
 // Hauptkomponente
-function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, startAutocomplete, setStartAutocomplete}) {
+function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, startAutocomplete, setStartAutocomplete, setIsAutocompleting}) {
 
   const [model, setModel] = useState(null); 
   const [tokenizer, setTokenizer] = useState(null);  // Tokenizer im Zustand speichern
@@ -75,22 +75,22 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, 
   // Funktion zum Autocomplete
   const autocomplete = (prefix) => {
     // Überprüfe, ob allPredictions und der Prefix vorhanden sind
-    if (!Array.isArray(allPredictions) || !prefix) {
+    if (!Array.isArray(allPredictions) || allPredictions.length === 0 || !prefix) {
         console.log("allPredictions oder Prefix fehlen");
         return [];
+    } else {
+
+      // Filtere die Wörter basierend auf dem Prefix
+      const filteredWords = allPredictions.filter(word => typeof word === 'string' && word.startsWith(prefix));
+      const top10FilteredWords = filteredWords.slice(0, 10);
+
+      console.log("Eingabe-Präfix:", prefix);
+      console.log("Gefilterte Vorhersagen:", top10FilteredWords);
+
+      setPrediction(top10FilteredWords);
+      setStartAutocomplete(false);  // Setze das Flag zurück, um weitere Autocomplete-Versuche zu starten
+      setIsAutocompleting(true);
     }
-
-    // Filtere die Wörter basierend auf dem Prefix
-    const filteredWords = allPredictions.filter(word => typeof word === 'string' && word.startsWith(prefix));
-
-    // Logge die Eingabe und die gefilterten Wörter
-    console.log("Eingabe-Präfix:", prefix);
-    console.log("Gefilterte Vorhersagen:", filteredWords);
-
-    // Gebe die Top 10 Wörter zurück
-    const top10FilteredWords = filteredWords.slice(0, 10);
-    setPrediction(top10FilteredWords);
-    setStartAutocomplete(false);  // Setze das Flag zurück, um weitere Autocomplete-Versuche zu starten
 };
 
   // Funktion für Vorhersage
@@ -157,16 +157,19 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, 
   // Autocomplete starten
   useEffect(() => {
     if (startAutocomplete && model && tokenizer && inputText.trim() !== '') {
-        // Extrahiere das letzte Wort (Prefix)
-        const words = inputText.trim().split(/\s+/);  
-        const prefix = words[words.length - 1];  // Das letzte Wort (unvollständig)
-        
-        console.log("Eingabewort:", prefix);  // Log für das extrahierte Prefix
 
-        // Autocomplete mit dem extrahierten Prefix ausführen
-        autocomplete(prefix);
+        // Wörter und Prefix extrahieren
+        const words = inputText.trim().split(/\s+/);  
+        const prefix = words[words.length - 1];  
+
+        // Prüfen, ob das letzte Wort ohne Leerzeichen endet
+        if (prefix && !inputText.endsWith(" ")) {
+            console.log("Eingabewort:", prefix);  
+            autocomplete(prefix);  
+        }
     }
 }, [startAutocomplete, inputText, model, tokenizer]);
+
 
   return (
     <div>

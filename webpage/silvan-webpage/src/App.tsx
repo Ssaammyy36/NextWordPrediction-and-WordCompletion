@@ -9,6 +9,7 @@ function App() {
   const [prediction , setPrediction ] = useState(null); 
   const [startPrediction, setStartPrediction] = useState(false);
   const [startAutocomplete, setStartAutocomplete] = useState(false);
+  const [isAutocompleting, setIsAutocompleting] = useState(false);
 
   return (
     <>
@@ -17,9 +18,12 @@ function App() {
           <div>
             <InputArea 
               inputText={inputText} 
+              prediction={prediction}
               setInputText={setInputText} 
               setStartPrediction={setStartPrediction}
               setStartAutocomplete={setStartAutocomplete}
+              setIsAutocompleting={setIsAutocompleting} 
+              isAutocompleting={isAutocompleting}
             /> 
           </div>
           <div>
@@ -27,6 +31,8 @@ function App() {
               setInputText={setInputText} 
               prediction={prediction} 
               setStartPrediction={setStartPrediction}
+              isAutocompleting={isAutocompleting}
+              setIsAutocompleting={setIsAutocompleting}
             />
           </div>
           <div>
@@ -37,6 +43,7 @@ function App() {
               setStartPrediction={setStartPrediction}
               startAutocomplete={startAutocomplete}
               setStartAutocomplete={setStartAutocomplete}
+              setIsAutocompleting={setIsAutocompleting}
             />
           </div>
         </div>

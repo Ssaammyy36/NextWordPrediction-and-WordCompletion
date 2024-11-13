@@ -1,13 +1,29 @@
 import React from 'react';
 import WordOutputButton from './WordOutputButton';
 
-function OutputArea({ setInputText, prediction, setStartPrediction }) {
+function OutputArea({ setInputText, prediction, setStartPrediction, isAutocompleting, setIsAutocompleting }) {
 
     // Eingabe ergänzen + neue Vorhersage starten
     const handleButtonClick = (word) => {
-        setInputText((prevText) => prevText + word + ' ');
-        console.log("Button geklickt.");
-        setStartPrediction(true); 
+        
+        if (isAutocompleting) {
+          setInputText((prevText) => {
+            // Teile den Text in Wörter, entferne das letzte Wort
+            const words = prevText.trim().split(" ");
+            console.log(words)
+            words.pop();
+            
+            // Füge das neue Wort an der Stelle des gelöschten Wortes hinzu und ergänze ein Leerzeichen
+            return words.join(" ") + " " + word + " ";
+          });
+          console.log("Button geklickt.");
+          setIsAutocompleting(false);
+          setStartPrediction(true); 
+        } else {
+          setInputText((prevText) => prevText + word + ' ');
+          console.log("Button geklickt.");
+          setStartPrediction(true); 
+        }
     };
 
     return (
