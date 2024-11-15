@@ -115,7 +115,7 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, 
             const predictionArray = prediction.dataSync();        // Tensor in Array konvertieren
             const sortedIndices = Array.from(predictionArray)
                 .map((prob, index) => ({ index, prob }))  
-                .sort((predictionA, predicitonB) => predicitonB.prob - predictionA.prob);            // Wörter absteigend sortieren nach Warscheinlaichzeiten
+                .sort((predictionA, predicitonB) => predicitonB.prob - predictionA.prob);            // Wörter absteigend sortieren nach Wahrscheinlaichzeiten
 
             // Alle Wörter
             const allWords = sortedIndices.map(item => tokenizer.indexWord[item.index]);
@@ -163,8 +163,7 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, 
         const prefix = words[words.length - 1];  
 
         // Prüfen, ob das letzte Wort ohne Leerzeichen endet
-        if (prefix && !inputText.endsWith(" ")) {
-            console.log("Eingabewort:", prefix);  
+        if (prefix && !inputText.endsWith(" ")) {  
             autocomplete(prefix);  
         }
     }

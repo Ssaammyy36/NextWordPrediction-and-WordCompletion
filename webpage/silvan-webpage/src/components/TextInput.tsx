@@ -11,7 +11,7 @@ function TextInput({ inputText, setInputText, prediction, setStartPrediction, se
         console.log("Eingegebener Text:", newInput);
     
         // Überprüfen, ob der letzte Zeichen ein Buchstabe ist
-        if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar)) {
+        if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar) && prediction) {
             console.log(`Buchstabe "${lastChar}" erkannt. Starte Autocomplete`);
 
             setStartAutocomplete(true); 

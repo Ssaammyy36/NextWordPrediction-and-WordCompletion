@@ -16,12 +16,12 @@ function OutputArea({ setInputText, prediction, setStartPrediction, isAutocomple
             // Füge das neue Wort an der Stelle des gelöschten Wortes hinzu und ergänze ein Leerzeichen
             return words.join(" ") + " " + word + " ";
           });
-          console.log("Button geklickt.");
+          console.log("Button geklickt. Starte Autocomplete");
           setIsAutocompleting(false);
           setStartPrediction(true); 
         } else {
           setInputText((prevText) => prevText + word + ' ');
-          console.log("Button geklickt.");
+          console.log("Button geklickt. Starte Prediction");
           setStartPrediction(true); 
         }
     };
