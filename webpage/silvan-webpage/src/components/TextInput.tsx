@@ -1,59 +1,76 @@
-import React, { useState } from 'react';
-import * as tf from '@tensorflow/tfjs';
+import React from 'react';
 
-
-function TextInput({ inputText, setInputText, prediction, setStartPrediction, setStartAutocomplete, setIsAutocompleting}) {
-
-    // Auslösung von Autocomplete bei neuen Buchstaben
+function TextInput({ inputText, setInputText, prediction, setStartPrediction, setStartAutocomplete, setIsAutocompleting }) {
+    // Function to handle input changes
     const handleInputChange = (e) => {
         const newInput = e.target.value;
-        const lastChar = newInput.slice(-1); // Letztes Zeichen
-        console.log("Eingegebener Text:", newInput);
-    
-        // Überprüfen, ob der letzte Zeichen ein Buchstabe ist
-        if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar) && prediction) {
-            console.log(`Buchstabe "${lastChar}" erkannt. Starte Autocomplete`);
+        const lastChar = newInput.slice(-1); // Last character
+        console.log("Entered text:", newInput);
 
-            setStartAutocomplete(true); 
+        // Buchstabe erkannt 
+        if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar) && prediction) {
+            console.log(`Letter "${lastChar}" detected. Starting autocomplete`);
+
+            setStartAutocomplete(true);
             setIsAutocompleting(true);
-            setInputText(newInput); // Den neuen Text setzen
+            setInputText(newInput); // Set new text
         }
-        // Überprüfen, ob der letzte Zeichen eine Zahl ist
+
+        // Nummer erkannt
         else if (/[0-9]/.test(lastChar)) {
-            console.log("Zahl erkannt:", lastChar);
+            console.log("Number detected:", lastChar);
             const index = parseInt(lastChar, 10);
             const predictionArray = prediction;
-    
-            // Überprüfen, ob `predictionArray` ein Array ist und der Index gültig ist
+
+            // Ensure `predictionArray` is an array and the index is valid
             if (Array.isArray(predictionArray) && predictionArray.length > 0 && index >= 0 && index < predictionArray.length) {
                 const selectedWord = predictionArray[index];
-                console.log(`Für Index ${index} Wort ${selectedWord} einsetzen`);
-    
-                // Zahl durch Wort ersetzen
+                console.log(`For index ${index}, replacing with word "${selectedWord}"`);
+
+                // Replace the number with the predicted word
                 const words = newInput.trim().split(" ");
-                words.pop();                                   
+                words.pop();
                 words.push(selectedWord);
                 setInputText(words.join(" ") + " ");
 
-                 // Vorhersage erneut starten
-                setStartPrediction(true); 
+                // Restart prediction
+                setStartPrediction(true);
             } else {
-                console.log("Kein gültiges Wort für den eingegebenen Index oder `predictionArray` ist leer/undefiniert");
+                console.log("Invalid index or `predictionArray` is empty/undefined");
             }
-        } 
-        // Wenn es keine Zahl oder Buchstabe ist, setze den neuen Input-Wert
-        else {
+        } else {
             setInputText(newInput);
         }
     };
-    
-    // Leertaste erkennen und Vorhersage starten
-    const handleKeyDown = (e) => {
-        if (e.key === ' ' && inputText.trim() !== '') {
-            console.log("Leertaste erkannt. Vorhersage starten");
 
-            setStartPrediction(true); 
+    // Function to handle key presses
+    const handleKeyDown = (e) => {
+
+        // Leertaste erkannt 
+        if (e.key === ' ' && inputText.trim() !== '') {
+            console.log("Space detected. Starting prediction");
+            setStartPrediction(true);
             setIsAutocompleting(false);
+        } 
+        
+        // Enter erkannt
+        else if (e.key === 'Enter') {
+            console.log("Enter key detected");
+            setInputText('');
+        } 
+        
+        // Tab erkannt
+        else if (e.key === 'Tab') {
+            console.log("Tab key detected. Lösche letztes Wort");
+            e.preventDefault(); // Prevent default tab behavior
+
+            setInputText((prevText) => {
+                // Teile den Text in Wörter, entferne das letzte Wort und lasse ein Leerzeichen am Ende
+                const words = prevText.trim().split(' ');
+                words.pop(); // Löscht das letzte Wort
+                return words.join(' ') + ' '; // Die restlichen Wörter wieder zusammensetzen und ein Leerzeichen hinzufügen
+            });
+            setStartPrediction(true);
         }
     };
 
@@ -63,9 +80,9 @@ function TextInput({ inputText, setInputText, prediction, setStartPrediction, se
                 type="text"
                 className="form-control"
                 placeholder="Input some text ..."
-                value={inputText} // Verknüpft den State mit dem Input-Feld
-                onChange={handleInputChange} // Aktualisiert den State bei Änderungen
-                onKeyDown={handleKeyDown} // Event für Tastenanschläge
+                value={inputText} // Bind the state to the input field
+                onChange={handleInputChange} // Update state on input changes
+                onKeyDown={handleKeyDown} // Handle key presses
             />
         </div>
     );

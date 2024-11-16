@@ -171,25 +171,27 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, 
 
 
   return (
-    <div>
+    <div className="mt-10">
       <h1>AI Area</h1>
 
-      {/* Ladeanzeige, wenn das Modell geladen wird */}
-      {isLoading ? (
-        <div className="d-flex align-items-center">
-          <div className="spinner-grow text-primary" role="status">
+      <div>
+        {/* Ladeanzeige, wenn das Modell geladen wird */}
+        {isLoading ? (
+          <div className="d-flex align-items-center">
+            <div className="spinner-grow text-primary" role="status">
+            </div>
           </div>
-        </div>
-      ) : isPredicting ? (
-        // Spinner während der Vorhersage
-        <div className="d-flex justify-content-center">
-          <div className="spinner-grow text-warning" role="status">
-            <span>Predicting ...</span>
+        ) : isPredicting ? (
+          // Spinner während der Vorhersage
+          <div className="d-flex justify-content-center">
+            <div className="spinner-grow text-warning" role="status">
+              <span>Predicting ...</span>
+            </div>
           </div>
-        </div>
-      ) : (
-        <p>Modell bereit ...</p>
-      )}
+        ) : (
+          <p>Modell bereit ...</p>
+        )}
+      </div>
     </div>
   );
 };
