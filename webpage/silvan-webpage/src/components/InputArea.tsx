@@ -9,7 +9,7 @@ function InputArea({inputText, prediction, setInputText, setStartPrediction, set
     return (
         <>
             <div className="p-10">
-                <h1>Input Text</h1>
+                <h3>Input Text</h3>
                 
                 <div>
                     <TextInput 

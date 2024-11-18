@@ -172,7 +172,7 @@ function AiArea({inputText, setPrediction, startPrediction, setStartPrediction, 
 
   return (
     <div className="mt-10">
-      <h1>AI Area</h1>
+      <h3>AI Area</h3>
 
       <div>
         {/* Ladeanzeige, wenn das Modell geladen wird */}

@@ -4,6 +4,7 @@ import InputArea from "./components/InputArea";
 import OutputArea from "./components/OutputArea";
 import AiArea from "./components/AiArea";
 import Header from "./components/Header";
+import OpenAi from './components/OpenAi';
 
 function App() {
   const [inputText, setInputText] = useState(''); 
@@ -21,7 +22,7 @@ function App() {
 
         {/* Restliche Inhalte */}
         <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-          <div className="w-100 mb-8"> {/* Abstand nach unten */}
+          <div className="w-100 m-8"> {/* Abstand nach unten */}
             <InputArea 
               inputText={inputText} 
               prediction={prediction}
@@ -32,7 +33,7 @@ function App() {
               isAutocompleting={isAutocompleting}
             /> 
           </div>
-          <div className="w-100 mb-8"> {/* Abstand nach unten */}
+          <div className="w-100 m-8"> {/* Abstand nach unten */}
             <OutputArea 
               setInputText={setInputText} 
               prediction={prediction} 
@@ -41,7 +42,7 @@ function App() {
               setIsAutocompleting={setIsAutocompleting}
             />
           </div>
-          <div className="w-100 mb-8"> {/* Abstand nach unten */}
+          <div className="w-100 m-8"> {/* Abstand nach unten */}
             <AiArea 
               inputText={inputText} 
               setPrediction={setPrediction}
@@ -51,6 +52,9 @@ function App() {
               setStartAutocomplete={setStartAutocomplete}
               setIsAutocompleting={setIsAutocompleting}
             />
+          </div>  
+          <div className="w-100 m-8">
+            <OpenAi />
           </div>
         </div>
       </div>

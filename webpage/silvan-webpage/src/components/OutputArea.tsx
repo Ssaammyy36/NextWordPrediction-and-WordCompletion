@@ -28,7 +28,7 @@ function OutputArea({ setInputText, prediction, setStartPrediction, isAutocomple
 
     return (
         <div className="mt-10">
-          <h1>Word Prediction</h1>
+          <h3>Word Prediction</h3>
           
           <div className="d-flex flex-wrap gap-3 justify-content-start"> {/* Flexbox-Container */}
             {prediction && prediction.length > 0 ? (
