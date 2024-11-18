@@ -1,7 +1,10 @@
 import { useState } from 'react';
 
 // Hinweis: API-Schlüssel sollte sicher als Umgebungsvariable gespeichert werden!
+<<<<<<< HEAD
 const API_KEY = "";
+=======
+>>>>>>> 42381f3 (attempt OpenAi)
 
 function OpenAi() {
   const [tweet, setTweet] = useState("");
