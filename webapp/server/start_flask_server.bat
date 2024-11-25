@@ -7,8 +7,8 @@ echo Verzeichnis gewechselt: %cd%
 
 REM Virtuelle Umgebung aktivieren
 call .\venv\Scripts\activate.bat
-# call .\venv\Scripts\activate
-# call .\venv\Scripts\activate.ps1
+:: call .\venv\Scripts\activate
+:: call .\venv\Scripts\activate.ps1
 
 echo Virtuelle Umgebung aktiviert
 python server.py

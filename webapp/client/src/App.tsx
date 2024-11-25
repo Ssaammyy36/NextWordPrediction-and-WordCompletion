@@ -43,7 +43,7 @@ function App() {
             />
           </div>
           <div className="w-100 m-8"> {/* Abstand nach unten */}
-            <AiArea 
+            {/* <AiArea 
               inputText={inputText} 
               setPrediction={setPrediction}
               startPrediction={startPrediction}
@@ -51,10 +51,14 @@ function App() {
               startAutocomplete={startAutocomplete}
               setStartAutocomplete={setStartAutocomplete}
               setIsAutocompleting={setIsAutocompleting}
-            />
+            /> */}
           </div>  
           <div className="w-100 m-8">
-            <FlaskServer />
+            <FlaskServer 
+              inputText={inputText} 
+              startPrediction={startPrediction}
+              setStartPrediction={setStartPrediction}
+            />
           </div>
         </div>
       </div>
