@@ -38,6 +38,14 @@ function TextInput({ inputText, setInputText, prediction, setStartPrediction, se
             } else {
                 console.log("Invalid index or `predictionArray` is empty/undefined");
             }
+
+        // Leertaste erkannt
+        } else if (newInput.trim() !== '' && newInput.endsWith(' ')) {
+            console.log("Space detected. Starting prediction");
+            setStartPrediction(true);
+            setIsAutocompleting(false);
+
+            setInputText(newInput);
         } else {
             setInputText(newInput);
         }
@@ -74,6 +82,7 @@ function TextInput({ inputText, setInputText, prediction, setStartPrediction, se
         }
     };
 
+
     return (
         <div className="input-group mb-3">
             <input
@@ -83,6 +92,7 @@ function TextInput({ inputText, setInputText, prediction, setStartPrediction, se
                 value={inputText} // Bind the state to the input field
                 onChange={handleInputChange} // Update state on input changes
                 onKeyDown={handleKeyDown} // Handle key presses
+                //onInput={handleOnInput}
             />
         </div>
     );

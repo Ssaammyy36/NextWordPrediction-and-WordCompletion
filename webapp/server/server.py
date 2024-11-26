@@ -106,9 +106,9 @@ def get_top_predictions(user_input, model, tokenizer, top_k=10):
     return sorted_predictions
 
 # Server Test Seite 
-@app.route("/")
+@app.route("/checkStatus")
 def home():
-    return "Hallo, das ist die Testseite des Flask Servers."
+    return "Online"
 
 # Vorhersage
 @app.route("/predict", methods=["POST"])

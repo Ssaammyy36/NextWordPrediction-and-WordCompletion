@@ -6,7 +6,8 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
   
   const [allPredictions, setAllPredictions] = useState([]);
   const [isSending, setIsSending] = useState(false); 
-  const [error, setError] = useState([]);
+  const [serverError, setServerError] = useState([]);
+  const [isServerOnline, setIsServerOnline] = useState(null);
 
   const sendTextToServer = async () => {
     try {
@@ -36,10 +37,34 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
       setStartPrediction(false);
     } catch (error) {
       console.error("Fehler beim Senden der Daten:", error);
-      setError(error.message || error.toString());
+      setServerError(error.message || error.toString());
     }
   };
 
+  // Funktion, um den Serverstatus zu prüfen
+  const checkServerStatus = async () => {
+    try {
+      const response = await fetch("http://192.168.178.78:5000/checkStatus");
+  
+      if (response.ok) {
+        const statusText = await response.text();
+        console.log("Server Status:", statusText); // Hier wird "Online" ausgegeben
+        setIsServerOnline(statusText === "Online");
+      } else {
+        console.error("Server ist nicht erreichbar");
+        setIsServerOnline(false);
+      }
+    } catch (error) {
+      console.error("Fehler beim Überprüfen des Serverstatus:", error);
+    }
+  };
+
+  // Server testen 
+  useEffect(() => {
+    checkServerStatus();
+  }, []);
+
+  // Vorhersage starten 
   useEffect(() => {
     if (startPrediction) {
       sendTextToServer();
@@ -48,26 +73,19 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
 
   return (
     <div>
-      <h3>Flask Server</h3>
-      {isSending ? (
-        <p>Sending ...</p>
+      <h1>Flask-Server Status</h1>
+      {isServerOnline === null ? (
+          <p>Überprüfe den Serverstatus...</p>
+      ) : isSending ? (
+          <p>Die Daten werden gesendet...</p>
+      ) : isServerOnline ? (
+          <p>Der Server ist online!</p>
       ) : (
-        <div>
-          <p>Bereit</p>
-        </div>
+          <p>Der Server ist offline. Fehler: {errorMessage}</p>
       )}
-      
-      {/* Fehleranzeige */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <button 
-        type="button" 
-        className="btn btn-outline-primary mb-3"
-        onClick={sendTextToServer}
-      >Sende Nachricht an Server</button>
-
+    
     </div>
-  );
+);
   
 }
 
