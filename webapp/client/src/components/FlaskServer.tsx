@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-const serverUrl = "http://127.0.0.1:5000/predict";
+const serverUrl = "http://192.168.178.78:5000/predict";
 
 function FlaskServer({ inputText, startPrediction, setStartPrediction, setPrediction }) {
   
   const [allPredictions, setAllPredictions] = useState([]);
   const [isSending, setIsSending] = useState(false); 
+  const [error, setError] = useState([]);
 
   const sendTextToServer = async () => {
     try {
@@ -35,6 +36,7 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
       setStartPrediction(false);
     } catch (error) {
       console.error("Fehler beim Senden der Daten:", error);
+      setError(error.message || error.toString());
     }
   };
 
@@ -46,14 +48,24 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
 
   return (
     <div>
-      <h3>Top 10 Predictions:</h3>
+      <h3>Flask Server</h3>
       {isSending ? (
-        <p>Loading...</p>
+        <p>Sending ...</p>
       ) : (
         <div>
-           <p>Bereit</p>
+          <p>Bereit</p>
         </div>
       )}
+      
+      {/* Fehleranzeige */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <button 
+        type="button" 
+        className="btn btn-outline-primary mb-3"
+        onClick={sendTextToServer}
+      >Sende Nachricht an Server</button>
+
     </div>
   );
   

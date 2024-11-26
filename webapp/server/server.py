@@ -4,6 +4,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
 import torch.nn.functional as F
+import re
 
 app = Flask(__name__)
 CORS(app)  # Aktiviere CORS für alle Routen
@@ -45,6 +46,18 @@ def load_model_and_tokenizer(model_dir, model_name="dbmdz/german-gpt2"):
 # Initialisierung von Tokenizer und Modell
 toker, model = load_model_and_tokenizer(MODEL_DIR)
 
+def remove_special_characters(word):
+    """
+    Entfernt alle Sonderzeichen (wie Satzzeichen) aus einem Wort.
+    
+    Args:
+        word (str): Das Wort, aus dem Sonderzeichen entfernt werden sollen.
+        
+    Returns:
+        str: Das Wort ohne Sonderzeichen.
+    """
+    return re.sub(r"[^A-Za-z0-9ÄÖÜäöüß]", "", word)  # Erlaubt nur Buchstaben (inkl. Umlaute) und Zahlen
+
 def get_top_predictions(user_input, model, tokenizer, top_k=10):
     """
     Generiert die Top-k wahrscheinlichsten Vorhersagen für das nächste Wort.
@@ -73,8 +86,15 @@ def get_top_predictions(user_input, model, tokenizer, top_k=10):
     top_k_ids = top_k_probs.indices[0].tolist()
     top_k_values = top_k_probs.values[0].tolist()  # Wahrscheinlichkeiten direkt als Float
 
-    # Top-k Wörter dekodieren
-    top_k_words = [tokenizer.decode(pred_id).strip() for pred_id in top_k_ids]
+    # Top-k Wörter dekodieren und Sonderzeichen entfernen
+    top_k_words = [remove_special_characters(tokenizer.decode(pred_id).strip()) for pred_id in top_k_ids]
+
+    # Filtere leere Wörter aus
+    top_k_words = [word for word in top_k_words if word]
+
+    # Wenn keine Wörter übrig sind, gebe eine leere Liste zurück
+    if not top_k_words:
+        return []
 
     # Kombiniere Wörter mit ihren Wahrscheinlichkeiten
     predictions_with_probs = [{"word": word, "probability": prob} for word, prob in zip(top_k_words, top_k_values)]
@@ -84,8 +104,6 @@ def get_top_predictions(user_input, model, tokenizer, top_k=10):
 
     print(f"Vorhersage (sortiert): {sorted_predictions}")
     return sorted_predictions
-
-
 
 # Server Test Seite 
 @app.route("/")
@@ -115,4 +133,4 @@ def predict():
         return jsonify({"error": "Fehler bei der Verarbeitung der Anfrage"}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
