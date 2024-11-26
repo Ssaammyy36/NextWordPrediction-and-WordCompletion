@@ -58,6 +58,7 @@ function App() {
               inputText={inputText} 
               startPrediction={startPrediction}
               setStartPrediction={setStartPrediction}
+              setPrediction={setPrediction}
             />
           </div>
         </div>
