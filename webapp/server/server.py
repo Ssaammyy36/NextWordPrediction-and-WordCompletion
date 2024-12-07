@@ -140,6 +140,8 @@ if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
 
 """
+    # Tests für die Vorhersage
+
     with app.test_client() as client:
         # Testinput erstellen
         test_input = {"inputText": "Hallo, wie geht es"}
@@ -153,4 +155,5 @@ if __name__ == "__main__":
             print("Antwort:", response.get_json())  # Ausgabe des JSON-Inhalts
         else:
             print("Fehler beim Anfragen:", response.status_code)
-            print("Antwort:", response.data.decode("utf-8"))"""
+            print("Antwort:", response.data.decode("utf-8"))
+"""

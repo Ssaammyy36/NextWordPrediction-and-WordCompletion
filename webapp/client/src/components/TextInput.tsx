@@ -1,52 +1,62 @@
 import React from 'react';
 
 function TextInput({ inputText, setInputText, prediction, setStartPrediction, setStartAutocomplete, setIsAutocompleting }) {
-    // Function to handle input changes
+
+    // Handle input changes (Laptop)
     const handleInputChange = (e) => {
         const newInput = e.target.value;
-        const lastChar = newInput.slice(-1); // Last character
-        console.log("Entered text:", newInput);
+        const lastChar = newInput.slice(-1); 
+        //console.log("Aktueller text:", newInput);
     
+        // Check if the last character is a letter and prediction is available
         if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar) && prediction) {
             console.log(`Letter "${lastChar}" detected. Starting autocomplete`);
             setStartAutocomplete(true);
             setIsAutocompleting(true);
             setInputText(newInput);
+        
+        // Check if the last character is a number
         } else if (/[0-9]/.test(lastChar)) {
-            console.log("Number detected:", lastChar);
-    
+            console.log(`Number "${lastChar}" detected. Auswahl wird übernommen ...`);
+        
             const index = parseInt(lastChar, 10);
             const predictionArray = prediction;
-    
+        
             // Validate prediction array
             if (Array.isArray(predictionArray) && index >= 0 && index < predictionArray.length) {
                 const selectedWord = predictionArray[index];
+                console.log("Test");
                 console.log(`Replacing number with word "${selectedWord}"`);
-    
-                // Replace the number with the selected word
-                const updatedText = newInput.replace(/\d+$/, selectedWord) + " ";
+        
+                // Replace the number and any incomplete word before it
+                const updatedText = newInput.replace(/\b\w*\d+$/, selectedWord) + " ";
                 setInputText(updatedText);
-    
+        
                 // Restart prediction
                 setStartPrediction(true);
             } else {
                 console.error("Invalid index or prediction array is empty");
             }
+        
+        // Check if the last character is a space
         } else if (newInput.trim() !== '' && newInput.endsWith(' ')) {
             console.log("Space detected. Starting prediction");
             setStartPrediction(true);
             setIsAutocompleting(false);
             setInputText(newInput);
+
+        // Normal Text aktualisieren    
         } else {
             setInputText(newInput);
         }
     };
+
     // Function to handle key presses (Smartphone-Tastatur)
     const handleKeyDown = (e) => {
 
         // Leertaste erkannt 
         if (e.key === ' ' && inputText.trim() !== '') {
-            console.log("Space detected. Starting prediction");
+            console.log("Space detected. Starting prediction ...");
             setStartPrediction(true);
             setIsAutocompleting(false);
         } 

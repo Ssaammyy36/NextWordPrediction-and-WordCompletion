@@ -27,8 +27,6 @@ function InputArea({inputText, prediction, setInputText, setStartPrediction, set
                         <DeleteLastWordButton setInputText={setInputText} />
                         <DeleteSentenceButton setInputText={setInputText} />
                     </div>
-
-                    {/* <OutputArea setInputText={setInputText} />  setInputText an OutputArea übergeben */}
                 </div>
             </div> 
         </>

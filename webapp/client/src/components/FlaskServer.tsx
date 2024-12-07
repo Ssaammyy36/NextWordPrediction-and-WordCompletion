@@ -17,7 +17,7 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
 
   const sendTextToServer = async () => {
     try {
-      console.log("Sende Daten an den Flask-Server", inputText);
+      console.log(`Sende Daten "${inputText}" an den Flask-Server ...`);
       setIsSending(true);
       const response = await fetch(PREDICT_URL, {
         method: "POST",
@@ -34,7 +34,7 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
       const predictions = data.predictions.map((item) => ({
         word: item.word
       }));
-      console.log("Extrahierte Daten:", predictions);
+      //console.log("Extrahierte Daten:", predictions);
       setAllPredictions(predictions);
 
       const words = data.predictions.slice(0, 10).map((item) => item.word);
@@ -51,11 +51,12 @@ function FlaskServer({ inputText, startPrediction, setStartPrediction, setPredic
   // Funktion, um den Serverstatus zu prüfen
   const checkServerStatus = async () => {
     try {
+      console.log("Prüfe den Serverstatus ...");
       const response = await fetch(CHECK_STATUS_URL);
   
       if (response.ok) {
         const statusText = await response.text();
-        console.log("Server Status:", statusText); // Hier wird "Online" ausgegeben
+        console.log("Server Antwort:", statusText); // Hier wird "Online" ausgegeben
         setIsServerOnline(statusText === "Online");
       } 
     } catch (error) {
