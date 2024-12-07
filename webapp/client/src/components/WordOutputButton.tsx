@@ -3,7 +3,7 @@ function WordOutputButton({ number, word, onClick }) {
         <>
             <button 
                 type="button" 
-                className="btn btn-outline-primary mb-3"
+                className="btn btn-outline-primary"
                 onClick={() => onClick(word)} // Hier wird die onClick-Prop aufgerufen
             >
                 <i className={`bi bi-${number}-circle`}></i> {word}

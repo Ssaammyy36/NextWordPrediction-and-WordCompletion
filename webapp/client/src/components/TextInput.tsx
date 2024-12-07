@@ -6,52 +6,42 @@ function TextInput({ inputText, setInputText, prediction, setStartPrediction, se
         const newInput = e.target.value;
         const lastChar = newInput.slice(-1); // Last character
         console.log("Entered text:", newInput);
-
-        // Buchstabe erkannt 
+    
         if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar) && prediction) {
             console.log(`Letter "${lastChar}" detected. Starting autocomplete`);
-
             setStartAutocomplete(true);
             setIsAutocompleting(true);
-            setInputText(newInput); // Set new text
-        }
-
-        // Nummer erkannt
-        else if (/[0-9]/.test(lastChar)) {
+            setInputText(newInput);
+        } else if (/[0-9]/.test(lastChar)) {
             console.log("Number detected:", lastChar);
+    
             const index = parseInt(lastChar, 10);
             const predictionArray = prediction;
-
-            // Ensure `predictionArray` is an array and the index is valid
-            if (Array.isArray(predictionArray) && predictionArray.length > 0 && index >= 0 && index < predictionArray.length) {
+    
+            // Validate prediction array
+            if (Array.isArray(predictionArray) && index >= 0 && index < predictionArray.length) {
                 const selectedWord = predictionArray[index];
-                console.log(`For index ${index}, replacing with word "${selectedWord}"`);
-
-                // Replace the number with the predicted word
-                const words = newInput.trim().split(" ");
-                words.pop();
-                words.push(selectedWord);
-                setInputText(words.join(" ") + " ");
-
+                console.log(`Replacing number with word "${selectedWord}"`);
+    
+                // Replace the number with the selected word
+                const updatedText = newInput.replace(/\d+$/, selectedWord) + " ";
+                setInputText(updatedText);
+    
                 // Restart prediction
                 setStartPrediction(true);
             } else {
-                console.log("Invalid index or `predictionArray` is empty/undefined");
+                console.error("Invalid index or prediction array is empty");
             }
-
-        // Leertaste erkannt
         } else if (newInput.trim() !== '' && newInput.endsWith(' ')) {
             console.log("Space detected. Starting prediction");
             setStartPrediction(true);
             setIsAutocompleting(false);
-
             setInputText(newInput);
         } else {
             setInputText(newInput);
         }
     };
-
-    // Function to handle key presses
+    // Function to handle key presses (Smartphone-Tastatur)
     const handleKeyDown = (e) => {
 
         // Leertaste erkannt 

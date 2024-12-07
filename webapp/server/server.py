@@ -5,7 +5,9 @@ import torch
 
 import torch.nn.functional as F
 import re
+import os
 
+# Starte Webserver
 app = Flask(__name__)
 CORS(app)  # Aktiviere CORS für alle Routen
 
@@ -13,33 +15,39 @@ MODEL_DIR = "./models/german-gpt2"
 
 def load_model_and_tokenizer(model_dir, model_name="dbmdz/german-gpt2"):
     """
-    Lädt das Modell und den Tokenizer aus dem lokalen Verzeichnis.
-    Falls nicht vorhanden, wird das Modell heruntergeladen und gespeichert.
+    Lädt das Modell und den Tokenizer aus dem lokalen Verzeichnis oder lädt es aus Hugging Face herunter.
 
     Args:
         model_dir (str): Das Verzeichnis, in dem das Modell und der Tokenizer lokal gespeichert sind.
-        model_name (str): Der Name des Modells, das aus dem Hugging Face Hub geladen werden soll (Standard: "dbmdz/german-gpt2").
+        model_name (str): Der Name des Modells aus dem Hugging Face Hub.
 
     Returns:
-        tuple: Ein Tupel bestehend aus dem Tokenizer und dem Modell.
+        tuple: Ein Tuple bestehend aus Tokenizer und Modell.
     """
     try:
-        # Versuche, den Tokenizer und das Modell aus dem lokalen Verzeichnis zu laden
-        print("Lade Modell und Tokenizer...")
-
+        # Lokales Laden versuchen
+        print(f"Versuche, Modell aus {model_dir} zu laden...")
         tokenizer = AutoTokenizer.from_pretrained(model_dir)
         model = AutoModelForCausalLM.from_pretrained(model_dir)
-        print("Modell und Tokenizer erfolgreich aus dem lokalen Verzeichnis geladen.")
+        print("Modell erfolgreich lokal geladen.")
 
-    except Exception as e:
-        # Wenn nicht lokal verfügbar, lade aus Hugging Face und speichere es
-        print(f"Lokal nicht gefunden. Lade aus dem Hugging Face Hub: {e}")
+    except Exception as local_error:
+        print(f"Fehler beim lokalen Laden: {local_error}")
 
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForCausalLM.from_pretrained(model_name)
-        tokenizer.save_pretrained(model_dir)
-        model.save_pretrained(model_dir)
-        print(f"Modell und Tokenizer wurden heruntergeladen und unter {model_dir} gespeichert.")
+        # Herunterladen aus Hugging Face
+        try:
+            print(f"Starte Download von {model_name}...")
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            model = AutoModelForCausalLM.from_pretrained(model_name)
+
+            # Speichern des Modells und Tokenizers
+            os.makedirs(model_dir, exist_ok=True)
+            tokenizer.save_pretrained(model_dir)
+            model.save_pretrained(model_dir)
+            print(f"Modell erfolgreich heruntergeladen und gespeichert in {model_dir}.")
+        except Exception as download_error:
+            print(f"Fehler beim Herunterladen: {download_error}")
+            raise RuntimeError("Weder lokales Laden noch Download des Modells war erfolgreich.") from download_error
 
     return tokenizer, model
 
@@ -47,34 +55,26 @@ def load_model_and_tokenizer(model_dir, model_name="dbmdz/german-gpt2"):
 toker, model = load_model_and_tokenizer(MODEL_DIR)
 
 def remove_special_characters(word):
-    """
-    Entfernt alle Sonderzeichen (wie Satzzeichen) aus einem Wort.
-    
-    Args:
-        word (str): Das Wort, aus dem Sonderzeichen entfernt werden sollen.
-        
-    Returns:
-        str: Das Wort ohne Sonderzeichen.
-    """
     return re.sub(r"[^A-Za-z0-9ÄÖÜäöüß]", "", word)  # Erlaubt nur Buchstaben (inkl. Umlaute) und Zahlen
 
-def get_top_predictions(user_input, model, tokenizer, top_k=10):
+def get_top_predictions(input, model, tokenizer, top_k=100):
     """
     Generiert die Top-k wahrscheinlichsten Vorhersagen für das nächste Wort.
 
     Args:
-        user_input (str): Der Eingabetext, für den Vorhersagen generiert werden sollen.
+        input (str): Der Eingabetext, für den Vorhersagen generiert werden sollen.
         model (transformers.PreTrainedModel): Das vortrainierte Sprachmodell.
         tokenizer (transformers.PreTrainedTokenizer): Der Tokenizer für das Sprachmodell.
-        top_k (int, optional): Die Anzahl der wahrscheinlichsten Vorhersagen. Standard: 10.
+        top_k (int, optional): Die Anzahl der wahrscheinlichsten Vorhersagen.
 
     Returns:
         list: Eine Liste der Top-k vorhergesagten Wörter und deren Wahrscheinlichkeiten.
     """
     # Tokenisiere den Text
-    inputs = tokenizer(user_input, return_tensors="pt")
+    inputs = tokenizer(input, return_tensors="pt")
 
     # Vorhersage für das nächste Token
+    print("Startet Vorhersage...")
     with torch.no_grad():
         logits = model(**inputs).logits[:, -1, :]
 
@@ -119,8 +119,12 @@ def predict():
         user_input = data.get("inputText", "")  # Standardmäßig ein leerer String, falls nicht vorhanden
         print(f"Empfangene Daten: {user_input}")
 
+        # Text vorbereiten
+        user_input = user_input.lower()
+        user_input = user_input.rstrip()
+
         # Generiere Vorhersagen
-        sorted_predictions = get_top_predictions(user_input, model, toker, top_k=100)
+        sorted_predictions = get_top_predictions(user_input, model, toker, top_k=200)
 
         # Rückgabe der Vorhersagen
         return jsonify({
@@ -134,3 +138,19 @@ def predict():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+
+"""
+    with app.test_client() as client:
+        # Testinput erstellen
+        test_input = {"inputText": "Hallo, wie geht es"}
+        
+        # POST-Anfrage an den /predict Endpunkt
+        response = client.post("/predict", json=test_input)
+        
+        # Antwort verarbeiten
+        if response.status_code == 200:
+            print("Vorhersage erfolgreich!")
+            print("Antwort:", response.get_json())  # Ausgabe des JSON-Inhalts
+        else:
+            print("Fehler beim Anfragen:", response.status_code)
+            print("Antwort:", response.data.decode("utf-8"))"""

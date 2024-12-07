@@ -15,14 +15,13 @@ function App() {
 
   return (
     <>
-      <div className="container d-flex flex-column min-vh-100 p-4">
-        <div>
+      <div className="container p-4">
+        <section>
           <Header />
-        </div>
+        </section>
 
-        {/* Restliche Inhalte */}
-        <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-          <div className="w-100 m-8"> {/* Abstand nach unten */}
+        <section className="d-flex flex-column gap-3">
+          <div>
             <InputArea 
               inputText={inputText} 
               prediction={prediction}
@@ -33,7 +32,7 @@ function App() {
               isAutocompleting={isAutocompleting}
             /> 
           </div>
-          <div className="w-100 m-8"> {/* Abstand nach unten */}
+          <div>
             <OutputArea 
               setInputText={setInputText} 
               prediction={prediction} 
@@ -42,7 +41,7 @@ function App() {
               setIsAutocompleting={setIsAutocompleting}
             />
           </div>
-          <div className="w-100 m-8"> {/* Abstand nach unten */}
+          <div >
             {/* <AiArea 
               inputText={inputText} 
               setPrediction={setPrediction}
@@ -53,15 +52,18 @@ function App() {
               setIsAutocompleting={setIsAutocompleting}
             /> */}
           </div>  
-          <div className="w-100 m-8">
+          <div >
             <FlaskServer 
               inputText={inputText} 
               startPrediction={startPrediction}
               setStartPrediction={setStartPrediction}
               setPrediction={setPrediction}
+              startAutocomplete = {startAutocomplete}
+              setStartAutocomplete = {setStartAutocomplete}
+              setIsAutocompleting = {setIsAutocompleting}
             />
           </div>
-        </div>
+        </section>
       </div>
     </>
   );
