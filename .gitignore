@@ -1,4 +1,4 @@
-knowledge/
 dataset/
+knowledge/
 models/
-webapp/server/venv/
+webapp/server/.venv/

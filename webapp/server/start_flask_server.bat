@@ -2,14 +2,12 @@
 echo Starte Venv und Server
 
 REM Wechsel zum gewünschten Verzeichnis
-cd /d C:\Users\samso\Desktop\Projekte\Silvan\silvan\server
+cd /d C:\Users\samso\Documents\01 Privat\Projekte\smart_keyboard\umsetzung\webapp\server
 echo Verzeichnis gewechselt: %cd%
 
 REM Virtuelle Umgebung aktivieren
-call .\venv\Scripts\activate.bat
-:: call .\venv\Scripts\activate
-:: call .\venv\Scripts\activate.ps1
+call ".\.venv\Scripts\activate.bat"
 
-echo Virtuelle Umgebung aktiviert
+echo Server starten
 python server.py
 

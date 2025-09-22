@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 
-// const SERVER_URL = "http://localhost:5000/"; // Local
-const SERVER_URL = "http://192.168.178.78:5000/"; // Home
+const SERVER_URL = "http://localhost:5000/"; // Local
+// const SERVER_URL = "http://192.168.178.78:5000/"; // Home
 // const SERVER_URL = "http://192.168.0.50:5000/"; // Kathi WG
+
+//const SERVER_URL = "http://192.168.179.34:5000";
 
 const PREDICT_URL = SERVER_URL + "predict";
 const CHECK_STATUS_URL = SERVER_URL + "checkStatus";
