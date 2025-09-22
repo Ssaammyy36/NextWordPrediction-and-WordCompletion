@@ -5,7 +5,7 @@ import DeleteLastLetterButton from './DeleteLastLetterButton';
 import DeleteLastWordButton from './DeleteLastWordButton';
 import DeleteSentenceButton from './DeleteSentenceButton';
 
-function InputArea({inputText, prediction, setInputText, setStartPrediction, setStartAutocomplete, setIsAutocompleting, isAutocompleting}) { 
+function InputArea({inputText, prediction, setInputText, setStartPrediction, setStartAutocomplete, setIsAutocompleting, isAutocompleting, setPrediction}) { 
     return (
         <>
             <div className="p-10">
@@ -20,6 +20,7 @@ function InputArea({inputText, prediction, setInputText, setStartPrediction, set
                         setStartAutocomplete={setStartAutocomplete}
                         setIsAutocompleting={setIsAutocompleting}
                         isAutocompleting={isAutocompleting}
+                        setPrediction={setPrediction}
                     />
 
                     <div className="d-flex flex-wrap gap-3">

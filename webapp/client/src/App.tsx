@@ -30,6 +30,7 @@ function App() {
               setStartAutocomplete={setStartAutocomplete}
               setIsAutocompleting={setIsAutocompleting} 
               isAutocompleting={isAutocompleting}
+              setPrediction={setPrediction}
             /> 
           </div>
           <div>
