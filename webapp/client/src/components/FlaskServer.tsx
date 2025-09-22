@@ -5,8 +5,8 @@ import React, { useState, useEffect } from "react";
 // ====================================================================================
 // Use a single source for the server URL to make it easily configurable.
 // Comment out the lines you are not using.
-const SERVER_URL = "http://localhost:5000/"; // For local development
-// const SERVER_URL = "http://192.168.178.78:5000/"; // Example: Home network
+// const SERVER_URL = "http://localhost:5000/"; // Local
+const SERVER_URL = "http://192.168.0.42:5000/"; // Home
 // const SERVER_URL = "http://192.168.0.50:5000/"; // Example: Other network
 
 const PREDICT_URL = SERVER_URL + "predict";
