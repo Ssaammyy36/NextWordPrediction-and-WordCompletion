@@ -1,18 +1,14 @@
-import { useState } from 'react';
-
 import InputArea from "./components/InputArea";
 import OutputArea from "./components/OutputArea";
-import AiArea from "./components/AiArea";
 import Header from "./components/Header";
 import FlaskServer from './components/FlaskServer';
 
+/**
+ * The main App component.
+ * It no longer manages state, but simply structures the layout of the application.
+ * All state is now handled by the PredictionProvider.
+ */
 function App() {
-  const [inputText, setInputText] = useState(''); 
-  const [prediction, setPrediction] = useState(null); 
-  const [startPrediction, setStartPrediction] = useState(false);
-  const [startAutocomplete, setStartAutocomplete] = useState(false);
-  const [isAutocompleting, setIsAutocompleting] = useState(false);
-
   return (
     <>
       <div className="container p-4">
@@ -22,47 +18,14 @@ function App() {
 
         <section className="d-flex flex-column gap-3">
           <div>
-            <InputArea 
-              inputText={inputText} 
-              prediction={prediction}
-              setInputText={setInputText} 
-              setStartPrediction={setStartPrediction}
-              setStartAutocomplete={setStartAutocomplete}
-              setIsAutocompleting={setIsAutocompleting} 
-              isAutocompleting={isAutocompleting}
-              setPrediction={setPrediction}
-            /> 
+            {/* All props have been removed, as components now get state from the context. */}
+            <InputArea /> 
           </div>
           <div>
-            <OutputArea 
-              setInputText={setInputText} 
-              prediction={prediction} 
-              setStartPrediction={setStartPrediction}
-              isAutocompleting={isAutocompleting}
-              setIsAutocompleting={setIsAutocompleting}
-            />
+            <OutputArea />
           </div>
-          <div >
-            {/* <AiArea 
-              inputText={inputText} 
-              setPrediction={setPrediction}
-              startPrediction={startPrediction}
-              setStartPrediction={setStartPrediction}
-              startAutocomplete={startAutocomplete}
-              setStartAutocomplete={setStartAutocomplete}
-              setIsAutocompleting={setIsAutocompleting}
-            /> */}
-          </div>  
-          <div >
-            <FlaskServer 
-              inputText={inputText} 
-              startPrediction={startPrediction}
-              setStartPrediction={setStartPrediction}
-              setPrediction={setPrediction}
-              startAutocomplete = {startAutocomplete}
-              setStartAutocomplete = {setStartAutocomplete}
-              setIsAutocompleting = {setIsAutocompleting}
-            />
+          <div>
+            <FlaskServer />
           </div>
         </section>
       </div>
