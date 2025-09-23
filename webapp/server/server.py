@@ -7,6 +7,8 @@ import torch.nn.functional as F
 import re
 import os
 
+MODEL_DIR = "./models/german-gpt2"
+
 # --- Helper Functions ---
 
 def load_model_and_tokenizer(model_dir, model_name="dbmdz/german-gpt2"):
@@ -106,8 +108,7 @@ def create_app():
     CORS(app)
 
     print("--- Initializing Application: Loading Model ---")
-    model_dir = "./models/german-gpt2"
-    toker, model = load_model_and_tokenizer(model_dir)
+    toker, model = load_model_and_tokenizer(MODEL_DIR)
     print("--- Model Loaded: Defining Routes ---")
 
     # --- API Endpoints (defined inside the factory) ---

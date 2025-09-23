@@ -1,10 +1,16 @@
 import React from 'react';
+import { usePredictionContext } from '../context/PredictionContext';
 
-function DeleteSentenceButton({ setInputText }) {
+function DeleteSentenceButton() {
+    // HOL DIR ALLE NÖTIGEN FUNKTIONEN AUS DEM GLOBALEN CONTEXT
+    const { setInputText, setPrediction } = usePredictionContext();
+
     function handleClick() {
         // Setze den inputText auf einen leeren String
         setInputText('');
-        console.log('Input field cleared!');
+        // Setze die predictions auf eine leere Liste
+        setPrediction([]); 
+        console.log('Input field and predictions cleared!');
     }
 
     return (

@@ -27,7 +27,7 @@ function InputArea() {
                     <div className="d-flex flex-wrap gap-3">
                         <DeleteLastLetterButton setInputText={setInputText} />
                         <DeleteLastWordButton setInputText={setInputText} />
-                        <DeleteSentenceButton setInputText={setInputText} />
+                        <DeleteSentenceButton />
                     </div>
                 </div>
             </div> 
