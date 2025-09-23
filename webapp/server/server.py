@@ -7,16 +7,7 @@ import torch.nn.functional as F
 import re
 import os
 
-# --- Initialization ---
-
-# Initialize the Flask web server
-app = Flask(__name__)
-# Enable Cross-Origin Resource Sharing (CORS) to allow the React app (from a different origin)
-# to make requests to this server.
-CORS(app)
-
-# Define the local directory to save/load the model from.
-MODEL_DIR = "./models/german-gpt2"
+# --- Helper Functions ---
 
 def load_model_and_tokenizer(model_dir, model_name="dbmdz/german-gpt2"):
     """
@@ -58,12 +49,6 @@ def load_model_and_tokenizer(model_dir, model_name="dbmdz/german-gpt2"):
 
     return tokenizer, model
 
-# Load the model and tokenizer when the server starts.
-# This is done once to avoid reloading on every request.
-toker, model = load_model_and_tokenizer(MODEL_DIR)
-
-# --- Helper Functions ---
-
 def remove_special_characters(word):
     """Removes special characters from a string, allowing only alphanumeric chars and German umlauts."""
     return re.sub(r"[^A-Za-z0-9ÄÖÜäöüß]", "", word)
@@ -85,75 +70,82 @@ def get_top_predictions(input_text, model, tokenizer, top_k=200):
     inputs = tokenizer(input_text, return_tensors="pt")
 
     # 2. Get model predictions (logits).
-    # `torch.no_grad()` disables gradient calculation, which is not needed for inference
-    # and makes the process faster and less memory-intensive.
     print("Generating predictions...")
     with torch.no_grad():
-        # The model returns logits for all positions; we only need the last one for the next word.
         logits = model(**inputs).logits[:, -1, :]
 
     # 3. Convert logits to probabilities using softmax.
     probs = F.softmax(logits, dim=-1)
 
-    # 4. Get the top 'k' predictions (both their probabilities and their token IDs).
+    # 4. Get the top 'k' predictions.
     top_k_probs = torch.topk(probs, top_k)
     top_k_ids = top_k_probs.indices[0].tolist()
     top_k_values = top_k_probs.values[0].tolist()
 
-    # 5. Decode the token IDs back into words and clean them up.
+    # 5. Decode and clean up words.
     decoded_words = [tokenizer.decode(pred_id).strip() for pred_id in top_k_ids]
     cleaned_words = [remove_special_characters(word) for word in decoded_words]
 
-    # 6. Combine words with their probabilities and filter out any empty strings
-    # that might result from cleaning special-character-only tokens.
+    # 6. Combine words with probabilities and filter out empty strings.
     predictions_with_probs = [
         {"word": word, "probability": prob}
         for word, prob in zip(cleaned_words, top_k_values) if word
     ]
 
-    # 7. Sort the final list by probability in descending order.
+    # 7. Sort the final list.
     sorted_predictions = sorted(predictions_with_probs, key=lambda x: x["probability"], reverse=True)
 
     print(f"Top predictions generated for input: '{input_text}'")
     return sorted_predictions
 
-# --- API Endpoints ---
+# --- Application Factory ---
 
-@app.route("/checkStatus")
-def check_status():
-    """A simple endpoint to check if the server is running."""
-    return "Online"
+def create_app():
+    """Creates and configures the Flask application."""
+    app = Flask(__name__)
+    CORS(app)
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    """
-    The main prediction endpoint.
-    Receives text from the client, generates predictions, and returns them as JSON.
-    """
-    try:
-        data = request.get_json()
-        user_input = data.get("inputText", "")
-        print(f"Received for prediction: '{user_input}'")
+    print("--- Initializing Application: Loading Model ---")
+    model_dir = "./models/german-gpt2"
+    toker, model = load_model_and_tokenizer(model_dir)
+    print("--- Model Loaded: Defining Routes ---")
 
-        # Basic text preparation.
-        prepared_input = user_input.lower().rstrip()
+    # --- API Endpoints (defined inside the factory) ---
+    @app.route("/checkStatus")
+    def check_status():
+        """A simple endpoint to check if the server is running."""
+        return "Online"
 
-        # Generate predictions using the model.
-        predictions = get_top_predictions(prepared_input, model, toker, top_k=200)
+    @app.route("/predict", methods=["POST"])
+    def predict():
+        """
+        The main prediction endpoint.
+        Receives text, generates predictions, and returns them as JSON.
+        """
+        try:
+            data = request.get_json()
+            user_input = data.get("inputText", "")
+            print(f"Received for prediction: '{user_input}'")
 
-        # Return the results in a JSON format.
-        return jsonify({
-            "input": user_input,
-            "predictions": predictions
-        })
-    except Exception as e:
-        print(f"An error occurred during prediction: {e}")
-        return jsonify({"error": "An error occurred on the server"}), 500
+            prepared_input = user_input.lower().rstrip()
+            predictions = get_top_predictions(prepared_input, model, toker, top_k=200)
+
+            return jsonify({
+                "input": user_input,
+                "predictions": predictions
+            })
+        except Exception as e:
+            print(f"An error occurred during prediction: {e}")
+            return jsonify({"error": "An error occurred on the server"}), 500
+
+    print("--- Application Ready ---")
+    return app
 
 # --- Server Start ---
 
+# Create the app instance using the factory.
+app = create_app()
+
 if __name__ == "__main__":
     # Starts the Flask development server.
-    # host='0.0.0.0' makes the server accessible from other devices on the same network.
-    # debug=True enables auto-reloading on code changes and provides detailed error pages.
     app.run(debug=True, host="0.0.0.0", port=5000)
