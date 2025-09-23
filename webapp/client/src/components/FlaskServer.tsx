@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { usePredictionContext } from "../context/PredictionContext";
 
 // Server Configuration
-const SERVER_URL = "http://192.168.0.42:5000/"; // Use the network IP for mobile testing
-const PREDICT_URL = SERVER_URL + "predict";
-const CHECK_STATUS_URL = SERVER_URL + "checkStatus";
+const PREDICT_URL = "/api/predict";
+const CHECK_STATUS_URL = "/api/checkStatus";
 
 /**
  * This component acts as a bridge to the Python/Flask backend.
@@ -75,6 +74,7 @@ function FlaskServer() {
             const response = await fetch(CHECK_STATUS_URL);
             if (response.ok) {
                 const statusText = await response.text();
+                console.log("Server is online");
                 setIsServerOnline(statusText === "Online");
             } else {
                 setIsServerOnline(false);
