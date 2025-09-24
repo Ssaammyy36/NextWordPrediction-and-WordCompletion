@@ -4,13 +4,13 @@ import { usePredictionContext } from "../context/PredictionContext";
 // Server Configuration
 const PREDICT_URL = "/api/predict";
 const CHECK_STATUS_URL = "/api/checkStatus";
+const STARTING_WORDS_URL = "/api/starting-words"; // New endpoint for starters
 
 /**
  * This component acts as a bridge to the Python/Flask backend.
- * It handles API calls for predictions and server status checks, using state from the global context.
+ * It handles API calls for predictions, server status, and initial data loading.
  */
 function FlaskServer() {
-    // Get all necessary state and functions from the global PredictionContext.
     const {
         inputText,
         startPrediction,
@@ -21,11 +21,11 @@ function FlaskServer() {
         setIsAutocompleting
     } = usePredictionContext();
 
-    // Local state for this component to manage its own UI (status, errors, etc.).
     const [allPredictions, setAllPredictions] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [serverError, setServerError] = useState<string | null>(null);
     const [isServerOnline, setIsServerOnline] = useState<boolean | null>(null);
+    const [hasFetchedFirstWordPredictions, setHasFetchedFirstWordPredictions] = useState(false);
 
     /**
      * Sends the current input text to the Flask server to get word predictions.
@@ -49,7 +49,7 @@ function FlaskServer() {
             }
 
             const data = await response.json();
-            console.log("Server response:", data);
+            console.log("...Server response:", data);
 
             setAllPredictions(data.predictions || []);
             const top10Words = (data.predictions || []).slice(0, 10).map((item: { word: string }) => item.word);
@@ -74,15 +74,41 @@ function FlaskServer() {
             const response = await fetch(CHECK_STATUS_URL);
             if (response.ok) {
                 const statusText = await response.text();
-                console.log("Server is online");
-                setIsServerOnline(statusText === "Online");
+                setIsServerOnline(statusText === "Online");  // if response is "Online", set setIsServerOnline to true
+                console.log("...Server status:", statusText);
             } else {
                 setIsServerOnline(false);
             }
         } catch (error: any) {
-            console.error("Server is not reachable:", error);
+            console.error("...Server is not reachable:", error);
             setIsServerOnline(false);
             setServerError(error.message || "Server is offline.");
+        }
+    };
+
+    /**
+     * Fetches the initial list of sentence starters.
+     */
+    const getStartingWords = async () => {
+        try {
+            console.log("Fetching starting words...");
+            const response = await fetch(STARTING_WORDS_URL);
+            if (response.ok) {
+                const data = await response.json();
+                if (inputText === '' && data.starters) {
+                    // Set the master list for the autocomplete function
+                    console.log("...Received starting words:", data.starters);
+                    setAllPredictions(data.starters);
+
+                    // Set the display list (top 10)
+                    const starterWords = data.starters
+                        .slice(0, 10)
+                        .map((item: { word: string }) => item.word);
+                    setPrediction(starterWords);
+                }
+            }
+        } catch (error: any) {
+            console.error("Could not fetch starting words:", error);
         }
     };
 
@@ -95,15 +121,16 @@ function FlaskServer() {
             return;
         }
 
-        console.log("Autocomplete prefix:", prefix);
+        console.log("Client-side autocomplete with prefix:", prefix);
 
-        const filteredWords = allPredictions
-            .filter((item: { word: string }) =>
-                item.word.trim().toLowerCase().startsWith(prefix.trim().toLowerCase())
-            )
+        const filteredPredictions = allPredictions.filter((item: { word: string }) =>
+            item.word.trim().toLowerCase().startsWith(prefix.trim().toLowerCase())
+        );
+
+        const top10FilteredWords = filteredPredictions
+            .slice(0, 10)
             .map((item: { word: string }) => item.word);
 
-        const top10FilteredWords = filteredWords.slice(0, 10);
         console.log("Filtered top 10:", top10FilteredWords);
 
         setPrediction(top10FilteredWords);
@@ -111,9 +138,10 @@ function FlaskServer() {
         setIsAutocompleting(true);
     };
 
-    // Check server status on component mount.
+    // On component mount, check server status and fetch starting words.
     useEffect(() => {
         checkServerStatus();
+        getStartingWords();
     }, []);
 
     // Trigger server prediction when requested.
@@ -123,17 +151,45 @@ function FlaskServer() {
         }
     }, [startPrediction]);
 
-    // Trigger client-side autocomplete when requested.
+    // Trigger server prediction when requested.
+    useEffect(() => {
+        if (startPrediction) {
+            sendTextToServer();
+        }
+    }, [startPrediction]);
+
+    // Trigger client-side autocomplete or fetch new predictions.
     useEffect(() => {
         if (startAutocomplete && inputText.trim() !== '') {
-            const words = inputText.trim().split(/\s+/);
+            const trimmedInput = inputText.trim();
+            const words = trimmedInput.split(/\s+/);
             const prefix = words[words.length - 1];
 
             if (prefix && !inputText.endsWith(" ")) {
-                autocomplete(prefix);
+                // Wenn es das erste Wort ist, das eingegeben wird
+                if (words.length === 1) {
+                    // Für das erste Wort immer clientseitige Autovervollständigung verwenden
+                    autocomplete(prefix);
+                    // Das Flag zurücksetzen, da wir den Server nicht für das erste Wort aufrufen
+                    setHasFetchedFirstWordPredictions(false);
+                } else {
+                    // Wenn der Benutzer ein nachfolgendes Wort eingibt, verwenden wir die clientseitige Autovervollständigung.
+                    // Hier wird davon ausgegangen, dass allPredictions bereits die Vorhersagen vom Server enthält,
+                    // die nach dem letzten Leerzeichen abgerufen wurden.
+                    autocomplete(prefix);
+                    // Setze das Flag für das nächste erste Wort (nach einem Leerzeichen) zurück
+                    setHasFetchedFirstWordPredictions(false);
+                }
             }
         }
-    }, [startAutocomplete, inputText]);
+    }, [startAutocomplete, inputText, hasFetchedFirstWordPredictions]); // hasFetchedFirstWordPredictions zu den Abhängigkeiten hinzufügen
+
+    // Wenn der Eingabetext leer wird, setze das Flag zurück
+    useEffect(() => {
+        if (inputText.trim() === '') {
+            setHasFetchedFirstWordPredictions(false);
+        }
+    }, [inputText]);
 
     return (
         <div>

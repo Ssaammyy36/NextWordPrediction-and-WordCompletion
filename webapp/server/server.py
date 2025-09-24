@@ -7,7 +7,11 @@ import torch.nn.functional as F
 import re
 import os
 
+import json
+
 MODEL_DIR = "./models/german-gpt2"
+MODEL_NAME= "dbmdz/german-gpt2"
+STARTING_WORDS_URL = "top100_starting_words.json"
 
 # --- Helper Functions ---
 
@@ -55,7 +59,7 @@ def remove_special_characters(word):
     """Removes special characters from a string, allowing only alphanumeric chars and German umlauts."""
     return re.sub(r"[^A-Za-z0-9ÄÖÜäöüß]", "", word)
 
-def get_top_predictions(input_text, model, tokenizer, top_k=200):
+def get_top_predictions(input_text, model, tokenizer, top_k=500):
     """
     Generates the top-k most likely next-word predictions for a given text.
 
@@ -88,10 +92,10 @@ def get_top_predictions(input_text, model, tokenizer, top_k=200):
     decoded_words = [tokenizer.decode(pred_id).strip() for pred_id in top_k_ids]
     cleaned_words = [remove_special_characters(word) for word in decoded_words]
 
-    # 6. Combine words with probabilities and filter out empty strings.
+    # 6. Combine words with probabilities and filter out empty strings and single-letter words.
     predictions_with_probs = [
         {"word": word, "probability": prob}
-        for word, prob in zip(cleaned_words, top_k_values) if word
+        for word, prob in zip(cleaned_words, top_k_values) if word and len(word) > 1
     ]
 
     # 7. Sort the final list.
@@ -108,7 +112,7 @@ def create_app():
     CORS(app)
 
     print("--- Initializing Application: Loading Model ---")
-    toker, model = load_model_and_tokenizer(MODEL_DIR)
+    toker, model = load_model_and_tokenizer(MODEL_DIR, MODEL_NAME)
     print("--- Model Loaded: Defining Routes ---")
 
     # --- API Endpoints (defined inside the factory) ---
@@ -116,6 +120,17 @@ def create_app():
     def check_status():
         """A simple endpoint to check if the server is running."""
         return "Online"
+
+    @app.route("/starting-words")
+    def get_starting_words():
+        """An endpoint to get a list of sentence starters."""
+        try:
+            with open("top100_starting_words.json", 'r', encoding='utf-8') as f:
+                starters = json.load(f)
+            return jsonify({"starters": starters})
+        except Exception as e:
+            print(f"Error loading starting words: {e}")
+            return jsonify({"starters": []}), 500 # Return empty list and error code
 
     @app.route("/predict", methods=["POST"])
     def predict():

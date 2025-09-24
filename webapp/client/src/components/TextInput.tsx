@@ -52,7 +52,7 @@ function TextInput() {
 
         // --- 1. Trigger Prediction (on Space) ---
         if (lastChar === ' ') {
-            console.log("Space detected. Starting prediction...");
+            console.log("Space detected. Starting prediction.");
             setStartPrediction(true);
             setIsAutocompleting(false);
             return;
@@ -60,7 +60,7 @@ function TextInput() {
 
         // --- 2. Trigger Autocomplete (on Letter) ---
         if (/[a-zA-ZäöüÄÖÜß]/.test(lastChar) && prediction && prediction.length > 0) {
-            console.log(`Letter "${lastChar}" detected. Starting autocomplete...`);
+            console.log(`Letter "${lastChar}" detected. Starting autocomplete.`);
             setStartAutocomplete(true);
             setIsAutocompleting(true);
             return;

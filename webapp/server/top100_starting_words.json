@@ -1,0 +1,402 @@
+[
+  {
+    "word": "Ich",
+    "probability": 0.221116
+  },
+  {
+    "word": "Die",
+    "probability": 0.105321
+  },
+  {
+    "word": "Der",
+    "probability": 0.068249
+  },
+  {
+    "word": "Das",
+    "probability": 0.050167
+  },
+  {
+    "word": "Es",
+    "probability": 0.039511
+  },
+  {
+    "word": "In",
+    "probability": 0.032508
+  },
+  {
+    "word": "Wir",
+    "probability": 0.027565
+  },
+  {
+    "word": "Er",
+    "probability": 0.023895
+  },
+  {
+    "word": "Sie",
+    "probability": 0.021066
+  },
+  {
+    "word": "Ein",
+    "probability": 0.01882
+  },
+  {
+    "word": "Eine",
+    "probability": 0.016995
+  },
+  {
+    "word": "Und",
+    "probability": 0.015484
+  },
+  {
+    "word": "Mit",
+    "probability": 0.014213
+  },
+  {
+    "word": "Im",
+    "probability": 0.01313
+  },
+  {
+    "word": "Auf",
+    "probability": 0.012196
+  },
+  {
+    "word": "Zu",
+    "probability": 0.011382
+  },
+  {
+    "word": "Am",
+    "probability": 0.010667
+  },
+  {
+    "word": "Für",
+    "probability": 0.010034
+  },
+  {
+    "word": "So",
+    "probability": 0.00947
+  },
+  {
+    "word": "Man",
+    "probability": 0.008964
+  },
+  {
+    "word": "Wenn",
+    "probability": 0.008508
+  },
+  {
+    "word": "Wie",
+    "probability": 0.008095
+  },
+  {
+    "word": "Auch",
+    "probability": 0.007719
+  },
+  {
+    "word": "Doch",
+    "probability": 0.007376
+  },
+  {
+    "word": "Nach",
+    "probability": 0.00706
+  },
+  {
+    "word": "Dabei",
+    "probability": 0.00677
+  },
+  {
+    "word": "Bei",
+    "probability": 0.006502
+  },
+  {
+    "word": "Nur",
+    "probability": 0.006254
+  },
+  {
+    "word": "Schon",
+    "probability": 0.006024
+  },
+  {
+    "word": "Aber",
+    "probability": 0.005809
+  },
+  {
+    "word": "Als",
+    "probability": 0.005609
+  },
+  {
+    "word": "Heute",
+    "probability": 0.005421
+  },
+  {
+    "word": "Gestern",
+    "probability": 0.005246
+  },
+  {
+    "word": "Morgen",
+    "probability": 0.005081
+  },
+  {
+    "word": "Während",
+    "probability": 0.004926
+  },
+  {
+    "word": "Wegen",
+    "probability": 0.004779
+  },
+  {
+    "word": "Ohne",
+    "probability": 0.004641
+  },
+  {
+    "word": "Unter",
+    "probability": 0.004511
+  },
+  {
+    "word": "Über",
+    "probability": 0.004387
+  },
+  {
+    "word": "Seit",
+    "probability": 0.00427
+  },
+  {
+    "word": "Vor",
+    "probability": 0.004159
+  },
+  {
+    "word": "Bis",
+    "probability": 0.004053
+  },
+  {
+    "word": "Dann",
+    "probability": 0.003952
+  },
+  {
+    "word": "Dort",
+    "probability": 0.003856
+  },
+  {
+    "word": "Hier",
+    "probability": 0.003764
+  },
+  {
+    "word": "Nun",
+    "probability": 0.003677
+  },
+  {
+    "word": "Noch",
+    "probability": 0.003593
+  },
+  {
+    "word": "Denn",
+    "probability": 0.003513
+  },
+  {
+    "word": "Damit",
+    "probability": 0.003436
+  },
+  {
+    "word": "Deshalb",
+    "probability": 0.003363
+  },
+  {
+    "word": "Darum",
+    "probability": 0.003292
+  },
+  {
+    "word": "Daher",
+    "probability": 0.003225
+  },
+  {
+    "word": "Allerdings",
+    "probability": 0.00316
+  },
+  {
+    "word": "Zudem",
+    "probability": 0.003097
+  },
+  {
+    "word": "Außerdem",
+    "probability": 0.003037
+  },
+  {
+    "word": "Später",
+    "probability": 0.002979
+  },
+  {
+    "word": "Früher",
+    "probability": 0.002923
+  },
+  {
+    "word": "Jetzt",
+    "probability": 0.002869
+  },
+  {
+    "word": "Etwa",
+    "probability": 0.002817
+  },
+  {
+    "word": "Vielleicht",
+    "probability": 0.002767
+  },
+  {
+    "word": "Gerade",
+    "probability": 0.002718
+  },
+  {
+    "word": "Kaum",
+    "probability": 0.002672
+  },
+  {
+    "word": "Trotzdem",
+    "probability": 0.002626
+  },
+  {
+    "word": "Zwar",
+    "probability": 0.002582
+  },
+  {
+    "word": "Jedoch",
+    "probability": 0.00254
+  },
+  {
+    "word": "Zum",
+    "probability": 0.002499
+  },
+  {
+    "word": "Zur",
+    "probability": 0.002459
+  },
+  {
+    "word": "Vom",
+    "probability": 0.00242
+  },
+  {
+    "word": "Manchmal",
+    "probability": 0.002383
+  },
+  {
+    "word": "Oft",
+    "probability": 0.002346
+  },
+  {
+    "word": "Selten",
+    "probability": 0.002311
+  },
+  {
+    "word": "Viele",
+    "probability": 0.002277
+  },
+  {
+    "word": "Vieles",
+    "probability": 0.002243
+  },
+  {
+    "word": "Einige",
+    "probability": 0.002211
+  },
+  {
+    "word": "Mehrere",
+    "probability": 0.002179
+  },
+  {
+    "word": "Jeder",
+    "probability": 0.002149
+  },
+  {
+    "word": "Jede",
+    "probability": 0.002119
+  },
+  {
+    "word": "Jedes",
+    "probability": 0.00209
+  },
+  {
+    "word": "Kein",
+    "probability": 0.002061
+  },
+  {
+    "word": "Keine",
+    "probability": 0.002034
+  },
+  {
+    "word": "Keiner",
+    "probability": 0.002007
+  },
+  {
+    "word": "Wer",
+    "probability": 0.001981
+  },
+  {
+    "word": "Was",
+    "probability": 0.001955
+  },
+  {
+    "word": "Wo",
+    "probability": 0.00193
+  },
+  {
+    "word": "Warum",
+    "probability": 0.001906
+  },
+  {
+    "word": "Weshalb",
+    "probability": 0.001882
+  },
+  {
+    "word": "Wieso",
+    "probability": 0.001859
+  },
+  {
+    "word": "Weil",
+    "probability": 0.001837
+  },
+  {
+    "word": "Ob",
+    "probability": 0.001815
+  },
+  {
+    "word": "Obwohl",
+    "probability": 0.001793
+  },
+  {
+    "word": "Falls",
+    "probability": 0.001772
+  },
+  {
+    "word": "Sobald",
+    "probability": 0.001751
+  },
+  {
+    "word": "Solange",
+    "probability": 0.001731
+  },
+  {
+    "word": "Da",
+    "probability": 0.001711
+  },
+  {
+    "word": "Dazu",
+    "probability": 0.001692
+  },
+  {
+    "word": "Daran",
+    "probability": 0.001673
+  },
+  {
+    "word": "Darüber",
+    "probability": 0.001655
+  },
+  {
+    "word": "Dafür",
+    "probability": 0.001637
+  },
+  {
+    "word": "Dagegen",
+    "probability": 0.001619
+  },
+  {
+    "word": "Darin",
+    "probability": 0.001602
+  }
+]
