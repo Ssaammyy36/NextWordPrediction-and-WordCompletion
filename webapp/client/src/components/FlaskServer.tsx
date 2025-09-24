@@ -25,7 +25,6 @@ function FlaskServer() {
     const [isSending, setIsSending] = useState(false);
     const [serverError, setServerError] = useState<string | null>(null);
     const [isServerOnline, setIsServerOnline] = useState<boolean | null>(null);
-    const [hasFetchedFirstWordPredictions, setHasFetchedFirstWordPredictions] = useState(false);
 
     /**
      * Sends the current input text to the Flask server to get word predictions.
@@ -138,6 +137,8 @@ function FlaskServer() {
         setIsAutocompleting(true);
     };
 
+    // -- Hook Effects --
+
     // On component mount, check server status and fetch starting words.
     useEffect(() => {
         checkServerStatus();
@@ -163,24 +164,19 @@ function FlaskServer() {
                 if (words.length === 1) {
                     // Für das erste Wort immer clientseitige Autovervollständigung verwenden
                     autocomplete(prefix);
-                    // Das Flag zurücksetzen, da wir den Server nicht für das erste Wort aufrufen
-                    setHasFetchedFirstWordPredictions(false);
                 } else {
                     // Wenn der Benutzer ein nachfolgendes Wort eingibt, verwenden wir die clientseitige Autovervollständigung.
                     // Hier wird davon ausgegangen, dass allPredictions bereits die Vorhersagen vom Server enthält,
                     // die nach dem letzten Leerzeichen abgerufen wurden.
                     autocomplete(prefix);
-                    // Setze das Flag für das nächste erste Wort (nach einem Leerzeichen) zurück
-                    setHasFetchedFirstWordPredictions(false);
                 }
             }
         }
-    }, [startAutocomplete, inputText, hasFetchedFirstWordPredictions]); // hasFetchedFirstWordPredictions zu den Abhängigkeiten hinzufügen
+    }, [startAutocomplete, inputText]); // hasFetchedFirstWordPredictions aus den Abhängigkeiten entfernen
 
-    // Wenn der Eingabetext leer wird, setze das Flag zurück und lade die Startwörter neu
+    // Wenn der Eingabetext leer wird, lade die Startwörter neu
     useEffect(() => {
         if (inputText.trim() === '') {
-            setHasFetchedFirstWordPredictions(false);
             // Lade die Startwörter neu, um sie direkt wieder anzuzeigen
             getStartingWords();
         }
