@@ -1,0 +1,814 @@
+[
+  {
+    "word": "Der",
+    "probability": 0.1
+  },
+  {
+    "word": "Die",
+    "probability": 0.095
+  },
+  {
+    "word": "Das",
+    "probability": 0.09
+  },
+  {
+    "word": "Ich",
+    "probability": 0.085
+  },
+  {
+    "word": "Und",
+    "probability": 0.08
+  },
+  {
+    "word": "Sie",
+    "probability": 0.075
+  },
+  {
+    "word": "Er",
+    "probability": 0.07
+  },
+  {
+    "word": "Es",
+    "probability": 0.065
+  },
+  {
+    "word": "In",
+    "probability": 0.06
+  },
+  {
+    "word": "Ein",
+    "probability": 0.055
+  },
+  {
+    "word": "Zu",
+    "probability": 0.05
+  },
+  {
+    "word": "Wir",
+    "probability": 0.045
+  },
+  {
+    "word": "Mit",
+    "probability": 0.04
+  },
+  {
+    "word": "Auf",
+    "probability": 0.035
+  },
+  {
+    "word": "Eine",
+    "probability": 0.03
+  },
+  {
+    "word": "Man",
+    "probability": 0.029
+  },
+  {
+    "word": "Nicht",
+    "probability": 0.028
+  },
+  {
+    "word": "So",
+    "probability": 0.027
+  },
+  {
+    "word": "Auch",
+    "probability": 0.026
+  },
+  {
+    "word": "Als",
+    "probability": 0.025
+  },
+  {
+    "word": "An",
+    "probability": 0.024
+  },
+  {
+    "word": "Von",
+    "probability": 0.023
+  },
+  {
+    "word": "Für",
+    "probability": 0.022
+  },
+  {
+    "word": "Dass",
+    "probability": 0.021
+  },
+  {
+    "word": "Hier",
+    "probability": 0.02
+  },
+  {
+    "word": "Da",
+    "probability": 0.019
+  },
+  {
+    "word": "Aber",
+    "probability": 0.018
+  },
+  {
+    "word": "Wenn",
+    "probability": 0.017
+  },
+  {
+    "word": "Nur",
+    "probability": 0.016
+  },
+  {
+    "word": "Noch",
+    "probability": 0.015
+  },
+  {
+    "word": "Jetzt",
+    "probability": 0.014
+  },
+  {
+    "word": "Aus",
+    "probability": 0.013
+  },
+  {
+    "word": "Bei",
+    "probability": 0.012
+  },
+  {
+    "word": "Oder",
+    "probability": 0.011
+  },
+  {
+    "word": "Nach",
+    "probability": 0.01
+  },
+  {
+    "word": "Bis",
+    "probability": 0.0099
+  },
+  {
+    "word": "Über",
+    "probability": 0.0098
+  },
+  {
+    "word": "Vor",
+    "probability": 0.0097
+  },
+  {
+    "word": "Was",
+    "probability": 0.0096
+  },
+  {
+    "word": "Wer",
+    "probability": 0.0095
+  },
+  {
+    "word": "Wie",
+    "probability": 0.0094
+  },
+  {
+    "word": "Wo",
+    "probability": 0.0093
+  },
+  {
+    "word": "Warum",
+    "probability": 0.0092
+  },
+  {
+    "word": "Dann",
+    "probability": 0.0091
+  },
+  {
+    "word": "Immer",
+    "probability": 0.009
+  },
+  {
+    "word": "Sehr",
+    "probability": 0.0089
+  },
+  {
+    "word": "Viel",
+    "probability": 0.0088
+  },
+  {
+    "word": "Mehr",
+    "probability": 0.0087
+  },
+  {
+    "word": "Wohl",
+    "probability": 0.0086
+  },
+  {
+    "word": "Doch",
+    "probability": 0.0085
+  },
+  {
+    "word": "Ja",
+    "probability": 0.0084
+  },
+  {
+    "word": "Nein",
+    "probability": 0.0083
+  },
+  {
+    "word": "Bitte",
+    "probability": 0.0082
+  },
+  {
+    "word": "Hallo",
+    "probability": 0.00815
+  },
+  {
+    "word": "Danke",
+    "probability": 0.0081
+  },
+  {
+    "word": "Gern",
+    "probability": 0.008
+  },
+  {
+    "word": "Vielleicht",
+    "probability": 0.0079
+  },
+  {
+    "word": "Kaum",
+    "probability": 0.0078
+  },
+  {
+    "word": "Fast",
+    "probability": 0.0077
+  },
+  {
+    "word": "Oft",
+    "probability": 0.0076
+  },
+  {
+    "word": "Selten",
+    "probability": 0.0075
+  },
+  {
+    "word": "Stets",
+    "probability": 0.0074
+  },
+  {
+    "word": "Nie",
+    "probability": 0.0073
+  },
+  {
+    "word": "Bald",
+    "probability": 0.0072
+  },
+  {
+    "word": "Gleich",
+    "probability": 0.0071
+  },
+  {
+    "word": "Eben",
+    "probability": 0.007
+  },
+  {
+    "word": "Gerade",
+    "probability": 0.0069
+  },
+  {
+    "word": "Wieder",
+    "probability": 0.0068
+  },
+  {
+    "word": "Hin",
+    "probability": 0.0067
+  },
+  {
+    "word": "Her",
+    "probability": 0.0066
+  },
+  {
+    "word": "Weg",
+    "probability": 0.0065
+  },
+  {
+    "word": "Zurück",
+    "probability": 0.0064
+  },
+  {
+    "word": "Während",
+    "probability": 0.0063
+  },
+  {
+    "word": "Wegen",
+    "probability": 0.0062
+  },
+  {
+    "word": "Trotz",
+    "probability": 0.0061
+  },
+  {
+    "word": "Statt",
+    "probability": 0.006
+  },
+  {
+    "word": "Außer",
+    "probability": 0.0059
+  },
+  {
+    "word": "Deswegen",
+    "probability": 0.0058
+  },
+  {
+    "word": "Daher",
+    "probability": 0.0057
+  },
+  {
+    "word": "Demnach",
+    "probability": 0.0056
+  },
+  {
+    "word": "Aufgrund",
+    "probability": 0.0055
+  },
+  {
+    "word": "Aus diesem Grund",
+    "probability": 0.0054
+  },
+  {
+    "word": "Dementsprechend",
+    "probability": 0.0053
+  },
+  {
+    "word": "Folglich",
+    "probability": 0.0052
+  },
+  {
+    "word": "Infolge",
+    "probability": 0.0051
+  },
+  {
+    "word": "Somit",
+    "probability": 0.005
+  },
+  {
+    "word": "Daraus folgt",
+    "probability": 0.0049
+  },
+  {
+    "word": "Demzufolge",
+    "probability": 0.0048
+  },
+  {
+    "word": "Darum",
+    "probability": 0.0047
+  },
+  {
+    "word": "Deshalb",
+    "probability": 0.0046
+  },
+  {
+    "word": "Also",
+    "probability": 0.0045
+  },
+  {
+    "word": "Dadurch",
+    "probability": 0.0044
+  },
+  {
+    "word": "Dennoch",
+    "probability": 0.0043
+  },
+  {
+    "word": "Trotzdem",
+    "probability": 0.0042
+  },
+  {
+    "word": "Obwohl",
+    "probability": 0.0041
+  },
+  {
+    "word": "Obgleich",
+    "probability": 0.004
+  },
+  {
+    "word": "Nichtsdestotrotz",
+    "probability": 0.0039
+  },
+  {
+    "word": "Allerdings",
+    "probability": 0.0038
+  },
+  {
+    "word": "Jedoch",
+    "probability": 0.0037
+  },
+  {
+    "word": "Im Gegensatz dazu",
+    "probability": 0.0036
+  },
+  {
+    "word": "Dagegen",
+    "probability": 0.0035
+  },
+  {
+    "word": "Demgegenüber",
+    "probability": 0.0034
+  },
+  {
+    "word": "Einerseits",
+    "probability": 0.0033
+  },
+  {
+    "word": "Andererseits",
+    "probability": 0.0032
+  },
+  {
+    "word": "Entgegen",
+    "probability": 0.0031
+  },
+  {
+    "word": "Hingegen",
+    "probability": 0.003
+  },
+  {
+    "word": "Wenngleich",
+    "probability": 0.0029
+  },
+  {
+    "word": "Zwar",
+    "probability": 0.0028
+  },
+  {
+    "word": "Darüber hinaus",
+    "probability": 0.0027
+  },
+  {
+    "word": "Außerdem",
+    "probability": 0.0026
+  },
+  {
+    "word": "Zudem",
+    "probability": 0.0025
+  },
+  {
+    "word": "Des Weiteren",
+    "probability": 0.0024
+  },
+  {
+    "word": "Ferner",
+    "probability": 0.0023
+  },
+  {
+    "word": "Neben",
+    "probability": 0.0022
+  },
+  {
+    "word": "Hinzu",
+    "probability": 0.0021
+  },
+  {
+    "word": "Überdies",
+    "probability": 0.002
+  },
+  {
+    "word": "Weiter",
+    "probability": 0.0019
+  },
+  {
+    "word": "Weiterhin",
+    "probability": 0.0018
+  },
+  {
+    "word": "Zusätzlich",
+    "probability": 0.0017
+  },
+  {
+    "word": "Zuerst",
+    "probability": 0.0016
+  },
+  {
+    "word": "Zunächst",
+    "probability": 0.0015
+  },
+  {
+    "word": "Als erstes",
+    "probability": 0.0014
+  },
+  {
+    "word": "Zu Beginn",
+    "probability": 0.0013
+  },
+  {
+    "word": "Erstens",
+    "probability": 0.0012
+  },
+  {
+    "word": "Zweitens",
+    "probability": 0.0011
+  },
+  {
+    "word": "Drittens",
+    "probability": 0.001
+  },
+  {
+    "word": "An erster Stelle",
+    "probability": 0.0009
+  },
+  {
+    "word": "Zum einen",
+    "probability": 0.0008
+  },
+  {
+    "word": "Zum anderen",
+    "probability": 0.0007
+  },
+  {
+    "word": "Danach",
+    "probability": 0.0006
+  },
+  {
+    "word": "Daraufhin",
+    "probability": 0.0005
+  },
+  {
+    "word": "Als nächstes",
+    "probability": 0.0004
+  },
+  {
+    "word": "Im Anschluss",
+    "probability": 0.0003
+  },
+  {
+    "word": "Letztendlich",
+    "probability": 0.0002
+  },
+  {
+    "word": "Zuletzt",
+    "probability": 0.0001
+  },
+  {
+    "word": "Zu guter Letzt",
+    "probability": 0.0001
+  },
+  {
+    "word": "Als Letztes",
+    "probability": 0.0001
+  },
+  {
+    "word": "Abschließend",
+    "probability": 0.0001
+  },
+  {
+    "word": "Anschließend",
+    "probability": 0.0001
+  },
+  {
+    "word": "Am Anfang",
+    "probability": 0.0001
+  },
+  {
+    "word": "Letztlich",
+    "probability": 0.0001
+  },
+  {
+    "word": "Nachfolgend",
+    "probability": 0.0001
+  },
+  {
+    "word": "Schließlich",
+    "probability": 0.0001
+  },
+  {
+    "word": "Heute",
+    "probability": 0.0001
+  },
+  {
+    "word": "Gestern",
+    "probability": 0.0001
+  },
+  {
+    "word": "Morgen",
+    "probability": 0.0001
+  },
+  {
+    "word": "Damals",
+    "probability": 0.0001
+  },
+  {
+    "word": "Früher",
+    "probability": 0.0001
+  },
+  {
+    "word": "Später",
+    "probability": 0.0001
+  },
+  {
+    "word": "Seitdem",
+    "probability": 0.0001
+  },
+  {
+    "word": "Zuvor",
+    "probability": 0.0001
+  },
+  {
+    "word": "Bislang",
+    "probability": 0.0001
+  },
+  {
+    "word": "Kürzlich",
+    "probability": 0.0001
+  },
+  {
+    "word": "Neulich",
+    "probability": 0.0001
+  },
+  {
+    "word": "Mittlerweile",
+    "probability": 0.0001
+  },
+  {
+    "word": "Vorher",
+    "probability": 0.0001
+  },
+  {
+    "word": "Derweil",
+    "probability": 0.0001
+  },
+  {
+    "word": "Gegenwärtig",
+    "probability": 0.0001
+  },
+  {
+    "word": "Indessen",
+    "probability": 0.0001
+  },
+  {
+    "word": "Besonders",
+    "probability": 0.0001
+  },
+  {
+    "word": "Insbesondere",
+    "probability": 0.0001
+  },
+  {
+    "word": "Primär",
+    "probability": 0.0001
+  },
+  {
+    "word": "Speziell",
+    "probability": 0.0001
+  },
+  {
+    "word": "Vor allem",
+    "probability": 0.0001
+  },
+  {
+    "word": "Vordergründig",
+    "probability": 0.0001
+  },
+  {
+    "word": "Vorwiegend",
+    "probability": 0.0001
+  },
+  {
+    "word": "Allen voran",
+    "probability": 0.0001
+  },
+  {
+    "word": "Angesichts",
+    "probability": 0.0001
+  },
+  {
+    "word": "Auf der Basis von",
+    "probability": 0.0001
+  },
+  {
+    "word": "Auf der Grundlage von",
+    "probability": 0.0001
+  },
+  {
+    "word": "Basierend auf",
+    "probability": 0.0001
+  },
+  {
+    "word": "Bezüglich",
+    "probability": 0.0001
+  },
+  {
+    "word": "Gemäß",
+    "probability": 0.0001
+  },
+  {
+    "word": "Hinsichtlich",
+    "probability": 0.0001
+  },
+  {
+    "word": "Im Hinblick auf",
+    "probability": 0.0001
+  },
+  {
+    "word": "In Anlehnung an",
+    "probability": 0.0001
+  },
+  {
+    "word": "In Bezug auf",
+    "probability": 0.0001
+  },
+  {
+    "word": "In diesem Zusammenhang",
+    "probability": 0.0001
+  },
+  {
+    "word": "Laut",
+    "probability": 0.0001
+  },
+  {
+    "word": "Was...betrifft",
+    "probability": 0.0001
+  },
+  {
+    "word": "Falls",
+    "probability": 0.0001
+  },
+  {
+    "word": "Für den Fall",
+    "probability": 0.0001
+  },
+  {
+    "word": "Gesetzt den Fall",
+    "probability": 0.0001
+  },
+  {
+    "word": "Im Falle von",
+    "probability": 0.0001
+  },
+  {
+    "word": "Sofern",
+    "probability": 0.0001
+  },
+  {
+    "word": "Unter der Voraussetzung",
+    "probability": 0.0001
+  },
+  {
+    "word": "Vorausgesetzt",
+    "probability": 0.0001
+  },
+  {
+    "word": "Weshalb",
+    "probability": 0.0001
+  },
+  {
+    "word": "Weswegen",
+    "probability": 0.0001
+  },
+  {
+    "word": "Wieso",
+    "probability": 0.0001
+  },
+  {
+    "word": "Wofür",
+    "probability": 0.0001
+  },
+  {
+    "word": "Woher",
+    "probability": 0.0001
+  },
+  {
+    "word": "Wohin",
+    "probability": 0.0001
+  },
+  {
+    "word": "Woran",
+    "probability": 0.0001
+  },
+  {
+    "word": "Inwiefern",
+    "probability": 0.0001
+  },
+  {
+    "word": "Guten",
+    "probability": 0.0068
+  },
+  {
+    "word": "Okay",
+    "probability": 0.0067
+  },
+  {
+    "word": "Stimmt",
+    "probability": 0.0066
+  },
+  {
+    "word": "Genau",
+    "probability": 0.0065
+  },
+  {
+    "word": "Sicher",
+    "probability": 0.0064
+  },
+  {
+    "word": "Natürlich",
+    "probability": 0.0063
+  },
+  {
+    "word": "Eigentlich",
+    "probability": 0.0062
+  },
+  {
+    "word": "Übrigens",
+    "probability": 0.0061
+  }
+]

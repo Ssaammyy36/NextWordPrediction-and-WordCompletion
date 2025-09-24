@@ -11,7 +11,7 @@ import json
 
 MODEL_DIR = "./models/german-gpt2"
 MODEL_NAME= "dbmdz/german-gpt2"
-STARTING_WORDS_URL = "top100_starting_words.json"
+STARTING_WORDS_URL = "top_starting_words.json"
 
 # --- Helper Functions ---
 
@@ -125,7 +125,7 @@ def create_app():
     def get_starting_words():
         """An endpoint to get a list of sentence starters."""
         try:
-            with open("top100_starting_words.json", 'r', encoding='utf-8') as f:
+            with open("top_starting_words.json", 'r', encoding='utf-8') as f:
                 starters = json.load(f)
             return jsonify({"starters": starters})
         except Exception as e:
