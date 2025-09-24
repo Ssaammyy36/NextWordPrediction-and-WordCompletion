@@ -3,13 +3,15 @@ import { usePredictionContext } from '../context/PredictionContext';
 
 function DeleteSentenceButton() {
     // HOL DIR ALLE NÖTIGEN FUNKTIONEN AUS DEM GLOBALEN CONTEXT
-    const { setInputText, setPrediction } = usePredictionContext();
+    const { setInputText, setPrediction, setHasFetchedFirstWordPredictions } = usePredictionContext();
 
     function handleClick() {
         // Setze den inputText auf einen leeren String
         setInputText('');
         // Setze die predictions auf eine leere Liste
         setPrediction([]); 
+        // Setze das Flag für die Vorhersagen des ersten Wortes zurück
+        setHasFetchedFirstWordPredictions(false);
         console.log('Input field and predictions cleared!');
     }
 

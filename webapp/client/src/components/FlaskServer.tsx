@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { usePredictionContext } from "../context/PredictionContext";
 
 // Server Configuration
@@ -89,7 +89,7 @@ function FlaskServer() {
     /**
      * Fetches the initial list of sentence starters.
      */
-    const getStartingWords = async () => {
+    const getStartingWords = useCallback(async () => {
         try {
             console.log("Fetching starting words...");
             const response = await fetch(STARTING_WORDS_URL);
@@ -110,7 +110,7 @@ function FlaskServer() {
         } catch (error: any) {
             console.error("Could not fetch starting words:", error);
         }
-    };
+    }, [inputText, setAllPredictions, setPrediction]);
 
     /**
      * Filters predictions on the client-side for fast autocomplete.
@@ -151,13 +151,6 @@ function FlaskServer() {
         }
     }, [startPrediction]);
 
-    // Trigger server prediction when requested.
-    useEffect(() => {
-        if (startPrediction) {
-            sendTextToServer();
-        }
-    }, [startPrediction]);
-
     // Trigger client-side autocomplete or fetch new predictions.
     useEffect(() => {
         if (startAutocomplete && inputText.trim() !== '') {
@@ -184,12 +177,14 @@ function FlaskServer() {
         }
     }, [startAutocomplete, inputText, hasFetchedFirstWordPredictions]); // hasFetchedFirstWordPredictions zu den Abhängigkeiten hinzufügen
 
-    // Wenn der Eingabetext leer wird, setze das Flag zurück
+    // Wenn der Eingabetext leer wird, setze das Flag zurück und lade die Startwörter neu
     useEffect(() => {
         if (inputText.trim() === '') {
             setHasFetchedFirstWordPredictions(false);
+            // Lade die Startwörter neu, um sie direkt wieder anzuzeigen
+            getStartingWords();
         }
-    }, [inputText]);
+    }, [inputText, getStartingWords]); // getStartingWords zu den Abhängigkeiten hinzufügen
 
     return (
         <div>

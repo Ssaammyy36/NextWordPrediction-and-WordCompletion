@@ -12,6 +12,8 @@ interface PredictionContextType {
     setStartAutocomplete: (start: boolean) => void;
     isAutocompleting: boolean;
     setIsAutocompleting: (isCompleting: boolean) => void;
+    hasFetchedFirstWordPredictions: boolean; // Hinzugefügt
+    setHasFetchedFirstWordPredictions: (fetched: boolean) => void; // Hinzugefügt
 }
 
 // Create the context. It will hold the global state.
@@ -28,6 +30,7 @@ export const PredictionProvider = ({ children }: { children: ReactNode }) => {
     const [startPrediction, setStartPrediction] = useState(false);
     const [startAutocomplete, setStartAutocomplete] = useState(false);
     const [isAutocompleting, setIsAutocompleting] = useState(false);
+    const [hasFetchedFirstWordPredictions, setHasFetchedFirstWordPredictions] = useState(false); // Hinzugefügt
 
     // The value object holds all the state and functions to be shared.
     const value = {
@@ -40,7 +43,9 @@ export const PredictionProvider = ({ children }: { children: ReactNode }) => {
         startAutocomplete,
         setStartAutocomplete,
         isAutocompleting,
-        setIsAutocompleting
+        setIsAutocompleting,
+        hasFetchedFirstWordPredictions, // Hinzugefügt
+        setHasFetchedFirstWordPredictions // Hinzugefügt
     };
 
     return (

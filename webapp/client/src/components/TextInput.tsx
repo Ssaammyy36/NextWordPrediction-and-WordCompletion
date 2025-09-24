@@ -15,7 +15,8 @@ function TextInput() {
         setStartPrediction,
         setStartAutocomplete,
         isAutocompleting,
-        setIsAutocompleting
+        setIsAutocompleting,
+        setHasFetchedFirstWordPredictions
     } = usePredictionContext();
 
     /**
@@ -35,6 +36,7 @@ function TextInput() {
             setInputText('');
             setPrediction([]); // Clear predictions from context.
             setIsAutocompleting(false);
+            setHasFetchedFirstWordPredictions(false); // Explizit zurücksetzen
         }
     };
 
