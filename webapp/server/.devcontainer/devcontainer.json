@@ -1,0 +1,21 @@
+{
+    "name": "Python 3.12 Server",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {},
+            "extensions": [
+                "ms-python.python",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "forwardPorts": [
+        5000
+    ],
+    "postCreateCommand": "pip install --upgrade pip && pip install pip-tools",
+    "remoteUser": "root"
+}

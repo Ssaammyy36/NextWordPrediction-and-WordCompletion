@@ -49,7 +49,7 @@ Um Pakete hinzuzufügen oder zu ändern, befolge diesen Prozess:
 2.  **`requirements.txt` neu erstellen:**
     Führe den folgenden Befehl aus. Er liest die `requirements.in` und erstellt eine neue `requirements.txt` mit allen transitiven Abhängigkeiten und fixierten Versionen.
     ```shell
-    pip-compile requirements.in
+    pip-compile requirements.in > requirements.txt
     ```
 
 3.  **Virtuelle Umgebung synchronisieren:**

@@ -1,13 +1,34 @@
+# Dockerfile for the Smart Keyboard Server
+
+# --- Build Stage ---
+FROM python:3.12-slim-bookworm AS builder
+
+# Set the working directory
+WORKDIR /app
+
+# Set a global timeout for all pip operations
+ENV PIP_DEFAULT_TIMEOUT=100
+
+# Install pip-tools
+RUN pip install --no-cache-dir pip-tools
+
+# Copy the requirements file
+COPY requirements.in .
+
+# Compile requirements to be compatible with the container's environment
+RUN pip-compile --strip-extras -o requirements.txt requirements.in
+
+# --- Final Stage --- 
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim-buster
+FROM python:3.12-slim-bookworm
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file into the container at /app
-COPY requirements.txt .
+# Copy the compiled requirements.txt from the builder stage
+COPY --from=builder /app/requirements.txt .
 
-# Install any needed packages specified in requirements.txt
+# Install the python packages
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code into the container
