@@ -37,6 +37,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(json_data["input"], test_input["inputText"])  # Eingabetext überprüfen
         self.assertIn("predictions", json_data)  # "predictions" sollte existieren
         self.assertIsInstance(json_data["predictions"], list)  # "predictions" sollte eine Liste sein
+        print(f"Predictions for '{test_input["inputText"]}': {json_data["predictions"]}")
 
     def test_invalid_request(self):
         """
@@ -65,6 +66,25 @@ class FlaskTestCase(unittest.TestCase):
         self.assertIn("predictions", json_data)  # "predictions" sollte existieren
         self.assertIsInstance(json_data["predictions"], list)  # "predictions" sollte eine Liste sein
 
+
+
+    def test_word_completion(self):
+        """
+        Tests the /test_completion endpoint for word completion.
+        """
+        # Request 
+        response = self.app.get("/test_completion?text=Der+Ba")
+        self.assertEqual(response.status_code, 200)
+        
+        # Check response
+        json_data = response.get_json()
+        self.assertIn("input", json_data)
+        self.assertEqual(json_data["input"], "Der Ba")
+        self.assertIn("completions", json_data)
+        self.assertIsInstance(json_data["completions"], list)
+
+        # Ausgabe anzeigen
+        print(f"Completions for '{json_data['input']}': {json_data['completions']}")
 
 
 if __name__ == "__main__":

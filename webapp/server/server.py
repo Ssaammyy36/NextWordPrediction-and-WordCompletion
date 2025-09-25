@@ -9,9 +9,12 @@ import os
 
 import json
 
+# Path
 MODEL_DIR = "./models/german-gpt2"
 MODEL_NAME= "dbmdz/german-gpt2"
 STARTING_WORDS_URL = "top_starting_words.json"
+
+TOP_K = 500  
 
 # --- Helper Functions ---
 
@@ -104,6 +107,67 @@ def get_top_predictions(input_text, model, tokenizer, top_k=500):
     print(f"Top predictions generated for input: '{input_text}'")
     return sorted_predictions
 
+def get_word_completions(input_text, model, tokenizer, num_completions=5):
+    """
+    Generates word completions for a given input text.
+    """
+    inputs = tokenizer(input_text, return_tensors="pt")
+    input_ids = inputs["input_ids"]
+
+    output_sequences = model.generate(
+        input_ids=input_ids,
+        max_length=len(input_ids[0]) + 10,
+        num_return_sequences=num_completions,
+        num_beams=num_completions,
+        early_stopping=True
+    )
+
+    completions = set()
+    incomplete_word = input_text.split(" ")[-1]
+    
+    for generated_sequence in output_sequences:
+        text = tokenizer.decode(generated_sequence, skip_special_tokens=True)
+        text = text[len(input_text):]
+        words = text.split(" ")
+        if len(words) > 0:
+            completed_word = incomplete_word + words[0]
+            cleaned_word = re.sub(r"[^A-Za-z0-9ÄÖÜäöüß]", "", completed_word)
+            if cleaned_word:
+                completions.add(cleaned_word)
+
+    return list(completions)
+    # 1. Tokenize the input text into a format the model understands.
+    inputs = tokenizer(input_text, return_tensors="pt")
+
+    # 2. Get model predictions (logits).
+    print("Generating predictions...")
+    with torch.no_grad():
+        logits = model(**inputs).logits[:, -1, :]
+
+    # 3. Convert logits to probabilities using softmax.
+    probs = F.softmax(logits, dim=-1)
+
+    # 4. Get the top 'k' predictions.
+    top_k_probs = torch.topk(probs, top_k)
+    top_k_ids = top_k_probs.indices[0].tolist()
+    top_k_values = top_k_probs.values[0].tolist()
+
+    # 5. Decode and clean up words.
+    decoded_words = [tokenizer.decode(pred_id).strip() for pred_id in top_k_ids]
+    cleaned_words = [remove_special_characters(word) for word in decoded_words]
+
+    # 6. Combine words with probabilities and filter out empty strings and single-letter words.
+    predictions_with_probs = [
+        {"word": word, "probability": prob}
+        for word, prob in zip(cleaned_words, top_k_values) if word and len(word) > 1
+    ]
+
+    # 7. Sort the final list.
+    sorted_predictions = sorted(predictions_with_probs, key=lambda x: x["probability"], reverse=True)
+
+    print(f"Top predictions generated for input: '{input_text}'")
+    return sorted_predictions
+
 # --- Application Factory ---
 
 def create_app():
@@ -116,6 +180,7 @@ def create_app():
     print("--- Model Loaded: Defining Routes ---")
 
     # --- API Endpoints (defined inside the factory) ---
+    
     @app.route("/checkStatus")
     def check_status():
         """A simple endpoint to check if the server is running."""
@@ -144,7 +209,7 @@ def create_app():
             print(f"Received for prediction: '{user_input}'")
 
             prepared_input = user_input.lower().rstrip()
-            predictions = get_top_predictions(prepared_input, model, toker, top_k=200)
+            predictions = get_top_predictions(prepared_input, model, toker, TOP_K)
 
             return jsonify({
                 "input": user_input,
@@ -152,6 +217,27 @@ def create_app():
             })
         except Exception as e:
             print(f"An error occurred during prediction: {e}")
+            return jsonify({"error": "An error occurred on the server"}), 500
+
+    @app.route("/test_completion")
+    def test_completion():
+        """
+        A test endpoint for word completion.
+        Takes an 'text' query parameter.
+        """
+        try:
+            input_text = request.args.get("text", "")
+            if not input_text:
+                return jsonify({"error": "The 'text' parameter is required."}), 400
+
+            print(f"Received for completion testing: '{input_text}'")
+            completions = get_word_completions(input_text, model, toker)
+            return jsonify({
+                "input": input_text,
+                "completions": completions
+            })
+        except Exception as e:
+            print(f"An error occurred during completion testing: {e}")
             return jsonify({"error": "An error occurred on the server"}), 500
 
     print("--- Application Ready ---")
