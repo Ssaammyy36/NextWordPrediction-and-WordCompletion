@@ -9,10 +9,13 @@ import os
 
 import json
 
+# Determine the absolute path of the directory containing this script.
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+
 # Path
-MODEL_DIR = "./models/german-gpt2"
+MODEL_DIR = os.path.join(_current_dir, "static", "models", "german-gpt2")
 MODEL_NAME= "dbmdz/german-gpt2"
-STARTING_WORDS_URL = "top_starting_words.json"
+STARTING_WORDS_URL = os.path.join(_current_dir, "static", "top_starting_words.json")
 
 TOP_K = 500  
 
@@ -190,7 +193,7 @@ def create_app():
     def get_starting_words():
         """An endpoint to get a list of sentence starters."""
         try:
-            with open("top_starting_words.json", 'r', encoding='utf-8') as f:
+            with open(STARTING_WORDS_URL, 'r', encoding='utf-8') as f:
                 starters = json.load(f)
             return jsonify({"starters": starters})
         except Exception as e:

@@ -1,5 +1,11 @@
 import unittest
-from server import app  # Importiere die Flask-App aus server.py
+import sys
+import os
+
+# Add the parent directory (server) to the Python path to allow for module imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from app.main import app  # Import the Flask app from its new location
 
 
 class FlaskTestCase(unittest.TestCase):

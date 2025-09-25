@@ -1,0 +1,7 @@
+# Direct dependencies for the project
+
+flask
+flask-cors
+transformers
+torch
+gunicorn

@@ -21,16 +21,39 @@
    C:\Users\samso\AppData\Local\Programs\Python\Python312\Scripts
    ```
 
-## Venv in Windows erstellen 
+## Venv in Windows erstellen und Abhängigkeiten verwalten
 
-1. Umgebung erstellen: `python -m venv .venv`
-2. Umgebung starten: `.\.venv\Scripts\Activate`
-3. Pip aktualisieren:  `pip install --upgrade pip`
-4. Requirements.txt installieren: `pip install -r requirements.txt`
-5. Umgebung beenden: `deactivate`
+Dieses Projekt verwendet `pip-tools` für ein sauberes und reproduzierbares Abhängigkeitsmanagement.
 
-### Arbeiten mit Venv
+1.  **Umgebung erstellen:**
+    `python -m venv .venv`
 
-1. Umgebung erstellen: `python -m venv .venv`
-2. Paketeversionen dokumentieren: `pip freeze > requirements.txt`
-3. Umgebung beenden: `deactivate`
+2.  **Umgebung aktivieren:**
+    `.\.venv\Scripts\Activate`
+
+3.  **Tools installieren und Abhängigkeiten synchronisieren:**
+    - `pip install --upgrade pip`
+    - `pip install pip-tools`
+    - `pip-sync` (Dieser Befehl installiert alle Pakete aus der `requirements.txt`)
+
+4.  **Umgebung beenden:**
+    `deactivate`
+
+### Workflow zur Verwaltung von Abhängigkeiten
+
+Um Pakete hinzuzufügen oder zu ändern, befolge diesen Prozess:
+
+1.  **Direkte Abhängigkeiten anpassen:**
+    Öffne die Datei `requirements.in` und füge die gewünschten Pakete hinzu oder entferne sie (z.B. `flask` oder `pandas`).
+
+2.  **`requirements.txt` neu erstellen:**
+    Führe den folgenden Befehl aus. Er liest die `requirements.in` und erstellt eine neue `requirements.txt` mit allen transitiven Abhängigkeiten und fixierten Versionen.
+    ```shell
+    pip-compile requirements.in
+    ```
+
+3.  **Virtuelle Umgebung synchronisieren:**
+    Führe diesen Befehl aus, um die Pakete in deiner `.venv` an die neue `requirements.txt` anzupassen. Fehlende Pakete werden installiert, überflüssige entfernt.
+    ```shell
+    pip-sync
+    ```

@@ -9,5 +9,5 @@ REM Virtuelle Umgebung aktivieren
 call ".\.venv\Scripts\activate.bat"
 
 echo Server starten
-python server.py
+python app\main.py
 

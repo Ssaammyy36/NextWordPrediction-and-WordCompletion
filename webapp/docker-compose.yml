@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./server # Path relative to webapp/
+    container_name: smart_keyboard_backend
+    restart: always
+    environment:
+      PYTHONUNBUFFERED: 1
+    # No ports exposed to the host, only accessible within the Docker network
+
+  proxy:
+    build: ./client # Path relative to webapp/
+    container_name: smart_keyboard_proxy
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
