@@ -6,16 +6,20 @@
     },
     "customizations": {
         "vscode": {
-            "settings": {},
+            "settings": {
+                "editor.formatOnSave": true,
+                "python.formatting.provider": "black"
+            },
             "extensions": [
                 "ms-python.python",
-                "ms-azuretools.vscode-docker"
+                "ms-azuretools.vscode-docker",
+                "ms-python.black-formatter"
             ]
         }
     },
     "forwardPorts": [
         5000
     ],
-    "postCreateCommand": "pip install --upgrade pip && pip install pip-tools",
     "remoteUser": "root"
 }
+

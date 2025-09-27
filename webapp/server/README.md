@@ -1,5 +1,7 @@
 # Venv 
 
+pip freeze > requirements.txt
+
 ## Pyhton version checken 
 
 1. Python version überprüfen: `python --version`
