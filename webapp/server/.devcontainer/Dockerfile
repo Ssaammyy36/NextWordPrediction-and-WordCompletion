@@ -5,7 +5,9 @@ FROM python:3.12-slim-bookworm
 WORKDIR /workspaces/umsetzung/webapp/server
 
 # Install git and upgrade pip
-RUN apt-get update && apt-get install -y git && python -m pip install --upgrade pip
+RUN apt-get update && \
+    apt-get install -y git && \ 
+    python -m pip install --upgrade pip
 
 # Copy and install requirements
 # This is done in a separate layer to leverage Docker's build cache.

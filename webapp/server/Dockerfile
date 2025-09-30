@@ -1,16 +1,16 @@
 # Dockerfile for the Smart Keyboard Server (Production)
-# This version uses a pre-generated 'requirements.txt' file.
 
 # --- Stage 1: Builder ---
 # This stage prepares all dependencies and downloads the ML model.
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.12-bookworm AS builder
 
 # Install build tools: git is needed by transformers to download from the hub.
-RUN apt-get update && apt-get install -y git && pip install --no-cache-dir --upgrade pip
+RUN apt-get update && \
+    pip install --no-cache-dir --upgrade pip
 
 WORKDIR /app
 
-# Copy the pre-generated requirements.txt file.
+# Copy the requirements
 COPY requirements.txt .
 
 # Download all dependencies as wheel files for faster, offline installation in the next stage.
@@ -19,7 +19,7 @@ RUN pip wheel --no-cache-dir --wheel-dir=/wheels --extra-index-url https://downl
 
 # Download the model from Hugging Face.
 # This layer is cached as long as the model name doesn't change.
-RUN pip install --no-cache-dir transformers[torch] --extra-index-url https://download.pytorch.org/whl/cpu && \
+RUN pip install --no-cache-dir --find-links=/wheels transformers[torch] --extra-index-url https://download.pytorch.org/whl/cpu && \
     python -c "from transformers import AutoTokenizer, AutoModelForCausalLM; \
                model_name = 'dbmdz/german-gpt2'; \
                model_dir = '/app/app/static/models/german-gpt2'; \
@@ -29,39 +29,33 @@ RUN pip install --no-cache-dir transformers[torch] --extra-index-url https://dow
 
 # --- Stage 2: Final Production Image ---
 # This stage builds the small, secure final image.
-FROM python:3.12-slim-bookworm
+FROM python:3.12-bookworm
 
-# Create a non-root user and group for security.
+
 RUN addgroup --system app && adduser --system --group app
 
 WORKDIR /app
 
-# Copy the requirements.txt from the builder stage.
-COPY --from=builder /app/requirements.txt .
 
-# Copy the downloaded Python package wheels from the builder stage.
+# Copy requirements and wheels
+COPY --from=builder /app/requirements.txt .
 COPY --from=builder /wheels /wheels
 
-# Install Python packages from local wheels without internet access.
-# We add the --extra-index-url here as well to be safe.
+# Install Python packages from local wheels
 RUN pip install --no-cache-dir --no-index --find-links=/wheels --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
 
-# Copy the application code from the current directory into the container.
+# Copy application code and model
 COPY ./app ./app
-
-# Copy the pre-downloaded model from the builder stage.
 COPY --from=builder /app/app/static/models/german-gpt2 ./app/static/models/german-gpt2
 
-# Change ownership of all files to the non-root user.
+# Set ownership for all files
 RUN chown -R app:app /app
 
-# Switch to the non-root user.
-# USER app # <-- Temporarily disabled for testing as root
+# (Optional) Diagnose file permissions
+RUN ls -laR /app
 
-# Expose port 5000 for Gunicorn.
-EXPOSE 5000
+# Switch to non-root user
+USER app
 
-# --- TEMPORARY TEST --- 
-# Run the app with the built-in Flask development server to isolate the problem.
-# This CMD will be used instead of the Gunicorn one.
-CMD ["python", "app/main.py"]
+# Start Gunicorn server
+CMD ["gunicorn", "--workers", "2", "--bind", "0.0.0.0:5000", "--preload", "app.main:app"]
