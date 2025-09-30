@@ -1,9 +1,11 @@
-import React from 'react';
+interface DeleteLastWordButtonProps {
+    setInputText: (value: React.SetStateAction<string>) => void;
+}
 
-function DeleteLastWordButton({ setInputText }) {
+function DeleteLastWordButton({ setInputText }: DeleteLastWordButtonProps) {
     // Funktion zum Löschen des letzten Wortes
     function deleteLastWord() {
-        setInputText((prevText) => {
+        setInputText((prevText: string) => {
             // Teile den Text in Wörter, entferne das letzte Wort und verbinde die restlichen Wörter
             return prevText.trim().split(' ').slice(0, -1).join(' ');
         });

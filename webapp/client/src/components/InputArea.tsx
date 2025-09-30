@@ -1,4 +1,3 @@
-import React from 'react';
 import TextInput from './TextInput';
 import DeleteLastLetterButton from './DeleteLastLetterButton';
 import DeleteLastWordButton from './DeleteLastWordButton';

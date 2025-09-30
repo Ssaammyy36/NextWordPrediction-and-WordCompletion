@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { usePredictionContext } from '../context/PredictionContext';
 
 /**
@@ -21,14 +21,14 @@ function TextInput() {
     /**
      * Handles changes to the input field by updating the global state.
      */
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(e.target.value);
     };
 
     /**
      * Handles the Enter key press to clear the input and predictions.
      */
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             console.log("Enter key detected, clearing input and predictions.");
             e.preventDefault();

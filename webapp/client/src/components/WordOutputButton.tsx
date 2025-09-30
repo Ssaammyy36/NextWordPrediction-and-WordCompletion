@@ -1,4 +1,10 @@
-function WordOutputButton({ number, word, onClick }) {
+interface WordOutputButtonProps {
+    number: number;
+    word: string;
+    onClick: (word: string) => void;
+}
+
+function WordOutputButton({ number, word, onClick }: WordOutputButtonProps) {
     return (
         <>
             <button 

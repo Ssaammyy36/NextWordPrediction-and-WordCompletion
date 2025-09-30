@@ -1,4 +1,3 @@
-import React from 'react';
 import { usePredictionContext } from '../context/PredictionContext';
 
 function DeleteSentenceButton() {

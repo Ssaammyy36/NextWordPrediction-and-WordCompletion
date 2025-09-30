@@ -1,9 +1,12 @@
-import React from 'react';
 
-function DeleteLastLetterButton({ setInputText }) {
+interface DeleteLastLetterButtonProps {
+    setInputText: (value: React.SetStateAction<string>) => void;
+}
+
+function DeleteLastLetterButton({ setInputText }: DeleteLastLetterButtonProps) {
     // Funktion zum Löschen des letzten Zeichens
     function deleteLastLetter() {
-        setInputText((prevText) => prevText.slice(0, -1)); // Entfernt das letzte Zeichen
+        setInputText((prevText: string) => prevText.slice(0, -1)); // Entfernt das letzte Zeichen
     }
     
     function handleClick() {

@@ -1,4 +1,3 @@
-import React from 'react';
 import WordOutputButton from './WordOutputButton';
 import { usePredictionContext } from '../context/PredictionContext';
 
@@ -21,9 +20,9 @@ function OutputArea() {
      * Its behavior changes based on whether the app is in "autocomplete" mode.
      * @param {string} word The predicted word that was clicked.
      */
-    const handleButtonClick = (word) => {
+    const handleButtonClick = (word: string) => {
         if (isAutocompleting) {
-            setInputText((prevText) => {
+            setInputText((prevText: string) => {
                 const words = prevText.trim().split(" ");
                 words.pop();
                 return words.join(" ") + " " + word + " ";
@@ -31,7 +30,7 @@ function OutputArea() {
             setIsAutocompleting(false);
             setStartPrediction(true);
         } else {
-            setInputText((prevText) => prevText + word + ' ');
+            setInputText((prevText: string) => prevText + word + ' ');
             setStartPrediction(true);
         }
     };

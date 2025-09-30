@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function ThemeSwitch() {
   const [theme, setTheme] = useState('light');
 
-  const toggleTheme = (e) => {
+  const toggleTheme = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTheme = e.target.checked ? 'dark' : 'light'; 
     document.documentElement.setAttribute('data-bs-theme', newTheme);
     setTheme(newTheme);

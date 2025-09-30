@@ -1,17 +1,17 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode } from 'react';
 
 // Define the shape of the context data for TypeScript
 interface PredictionContextType {
     inputText: string;
-    setInputText: (text: string) => void;
+    setInputText: React.Dispatch<React.SetStateAction<string>>;
     prediction: string[] | null;
-    setPrediction: (prediction: string[] | null) => void;
+    setPrediction: React.Dispatch<React.SetStateAction<string[] | null>>;
     startPrediction: boolean;
-    setStartPrediction: (start: boolean) => void;
+    setStartPrediction: React.Dispatch<React.SetStateAction<boolean>>;
     startAutocomplete: boolean;
-    setStartAutocomplete: (start: boolean) => void;
+    setStartAutocomplete: React.Dispatch<React.SetStateAction<boolean>>;
     isAutocompleting: boolean;
-    setIsAutocompleting: (isCompleting: boolean) => void;
+    setIsAutocompleting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Create the context. It will hold the global state.

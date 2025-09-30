@@ -1,4 +1,3 @@
-import React from "react";
 import ThemeSwitch from "./ThemeSwitch";
 
 const Header = () => {
