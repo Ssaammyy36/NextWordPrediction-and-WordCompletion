@@ -58,4 +58,4 @@ RUN ls -laR /app
 USER app
 
 # Start Gunicorn server
-CMD ["gunicorn", "--workers", "2", "--bind", "0.0.0.0:5000", "--log-level", "debug", "app.main:app"]
+CMD ["gunicorn", "--workers", "2", "--bind", "0.0.0.0:5000", "--log-level", "info", "app.main:app"]

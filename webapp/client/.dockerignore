@@ -1,0 +1,19 @@
+# Ignore node_modules and local development files
+node_modules
+.env
+.env.*
+npm-debug.log
+
+# Ignore build output (it's created inside the container)
+dist
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore git files
+.git
+.gitignore
+
+# Ignore IDE settings
+.vscode

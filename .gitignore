@@ -2,3 +2,48 @@ dataset/
 knowledge/
 models/
 webapp/server/.venv/
+
+# Node / frontend build artifacts
+webapp/client/node_modules/
+webapp/client/dist/
+webapp/client/build/
+webapp/client/.vite/
+
+# Python envs / caches
+webapp/**/.venv/
+webapp/**/venv/
+__pycache__/
+*.py[cod]
+
+# Docker / runtime data (do not commit runtime state or secrets)
+webapp/letsencrypt/
+webapp/npm_data/
+webapp/portainer_data/
+webapp/logs/
+webapp/tmp/
+webapp/cache/
+
+# Databases
+webapp/**/*.sqlite
+webapp/**/*.db
+
+# Secrets / keys
+webapp/.env
+webapp/.env.*
+webapp/keys.json
+webapp/access/
+webapp/custom_ssl/
+*.pem
+*.key
+*.p12
+
+# Large model files (don't store weights in Git)
+models/**/model.safetensors
+models/**/pytorch_model.bin
+models/**/model.bin
+models/**/checkpoint*
+*.tar.gz
+*.zip
+
+# Logs / misc
+*.log

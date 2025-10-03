@@ -176,7 +176,10 @@ def get_word_completions(input_text, model, tokenizer, num_completions=5):
 def create_app():
     """Creates and configures the Flask application."""
     app = Flask(__name__)
-    CORS(app)
+    # TODO: For production, add your website's domain to this list for security.
+    # Example: origins = ["http://localhost:80", "https://www.your-smart-keyboard.com"]
+    origins = ["http://localhost", "http://localhost:80", "https://localhost"]
+    CORS(app, origins=origins)
 
     print("--- Initializing Application: Loading Model ---")
     toker, model = load_model_and_tokenizer(MODEL_DIR, MODEL_NAME)

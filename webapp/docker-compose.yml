@@ -1,19 +1,56 @@
 version: '3.8'
 
+networks:
+  smart_keyboard_network:
+
 services:
+  # NGINX PROXY MANAGER - Unser neuer Reverse-Proxy
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: smart_keyboard_proxy
+    restart: unless-stopped
+    ports:
+      # Public HTTP Port
+      - '80:80'
+      # Public HTTPS Port
+      - '443:443'
+      # Admin Web UI
+      - '81:81'
+    volumes:
+      - ./npm_data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - smart_keyboard_network
+
+  # BACKEND - Dein Flask-Server
   backend:
-    build: ./server # Path relative to webapp/
+    build: ./server
     container_name: smart_keyboard_backend
     restart: always
     environment:
       PYTHONUNBUFFERED: 1
-    # No ports exposed to the host, only accessible within the Docker network
+    networks:
+      - smart_keyboard_network
 
-  proxy:
-    build: ./client # Path relative to webapp/
-    container_name: smart_keyboard_proxy
+  # FRONTEND - Dein React-Client
+  frontend:
+    build: ./client
+    container_name: smart_keyboard_frontend
     restart: always
+    networks:
+      - smart_keyboard_network
+
+  # Portainer - lightweight management UI for Docker
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: smart_keyboard_portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock
     ports:
-      - "80:80"
-    depends_on:
-      - backend
+      - '9000:9000' # HTTP UI (use only locally or behind a reverse-proxy)
+      - '9443:9443' # Optional HTTPS UI
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer_data:/data
+    networks:
+      - smart_keyboard_network
